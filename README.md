@@ -25,7 +25,7 @@ Run:
 ./run_all_experiments.sh
 ```
 
-This will create the following output structure:
+This will create the following output structure (to keep things neat not all files are shown here):
 ```
 reports/
 └── paper-visualizations/
@@ -33,7 +33,19 @@ reports/
     │   ├── latent2D_CANCER_TYPE_ACRONYM.png
     │   ├── latent2D_epoch0.png
     │   ├── latent_cov_per_epoch.png
+    |   ├── latent2D_author_cell_type
     │   └── loss_plot_absolute.png
+    │   └── ...
+    ├── Exp2/
+    │   ├── Exp2_Fig3A_reconcap.png
+    │   ├── Exp2_Fig3BC_embeddingcap.png
+    │   ├── Exp2_Fig4A_totallossimprovement.png
+    │   └── ...
+    ├── Exp3/
+    │   ├── example_latent_dist_SC_Chr_author_cell_type.png
+    │   ├── example_latent_dist_SC_Rea_age_group.png
+    │   ├── Ontix_beta_SC.png
+    │   └── ...
     ├── Exp4/
     │   ├── image_comparison_grid_test.png
     │   ├── image_comparison_grid_train.png
@@ -41,19 +53,35 @@ reports/
     │   ├── latent2D_Aligned_extra_class_labels.png
     │   ├── latent_dist_extra_class_labels.png
     │   ├── loss_plot_absolute.png
-    │   ├── loss_plot_relative.png
-    │   ├── translategrid_extra_class_labels.png
-    │   ├── xmodalix_eval_classifier_losses.png
-    │   ├── xmodalix_eval_regression_losses.png
-    │   └── xmodalix_recon_eval_regression_losses.png
+    │   └── ...
     └── Exp5/
+    │   └── image_comparison_grid_test
+    │   └── ....
 
 ```
+### Warning
+The script `./run_all_experiments.sh` will run for days (depending on your hardware). A more suitable way would be to run the scripts on a High Performance Compute Cluster (HPC). We provide the following scripts:
+```
+.
+├── run_SC-UL_prerun.sh
+├── run_SC-UL_exp1.sh
+├── run_SC-UL_exp2.sh
+├── run_SC-UL_exp3.sh
+├── run_SC-UL_exp4.sh
+└── run_SC-UL_exp5.sh
 
+```
+INSTRUCTION:
+
+- These scripts have a specific slurm configuration that might not work on your HPC. So before starting the scripts, search `#SBATCH` inside each script and configure according to your system
+- The `run_SC-UL_prerun.sh` needs to run before all other scripts once to get the data and setup the environment, etc.
+- The scripts `run_SC-UL_exp2.sh` and `run_SC-UL_exp3.sh` needs to be started with the command:
+    - `bash run_SC-UL_exp2.sh` and  `bash run_SC-UL_exp3.sh`
+    - the other scrips can be sent the "normal" way to your slurm cluster via `sbatch <script.sh>`
 
   
 
-# AUTOENCODIX
+# Normal README AUTOENCODIX
 
 Autoencoders are deep-learning based networks for dimension reduction and embedding by a combination of compressing encoder and decoder structure for non-linear and multi-modal data integration with promising application to complex biological data from large-scale omics measurements. Current ongoing research and publication provide many exciting architectures and implementations of autoencoders. However, there is a lack of easy-to-use and unified implementation covering the whole pipeline of autoencoder application.
 Consequently, we present `AUTOENCODIX` with the following features:
