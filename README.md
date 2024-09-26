@@ -78,6 +78,7 @@ INSTRUCTION:
 - The scripts `run_SC-UL_exp2.sh` and `run_SC-UL_exp3.sh` needs to be started with the command:
     - `bash run_SC-UL_exp2.sh` and  `bash run_SC-UL_exp3.sh`
     - the other scrips can be sent the "normal" way to your slurm cluster via `sbatch <script.sh>`
+ - The scripts will attempt to upload the results to a nextcloud, this will fail for you, because you don't have our nextcloud credentials in your .env file. So the error can be ignored and does not interfere with result generation.
 
   
 
