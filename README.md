@@ -27,27 +27,27 @@ Run:
 
 This will create the following output structure:
 ```
-TODO make nice looking
-reports/paper-visualizations/Exp1:
-latent2D_CANCER_TYPE_ACRONYM.png
-latent2D_epoch0.png
-latent_cov_per_epoch.png
-loss_plot_absolute.png
+reports/
+└── paper-visualizations/
+    ├── Exp1/
+    │   ├── latent2D_CANCER_TYPE_ACRONYM.png
+    │   ├── latent2D_epoch0.png
+    │   ├── latent_cov_per_epoch.png
+    │   └── loss_plot_absolute.png
+    ├── Exp4/
+    │   ├── image_comparison_grid_test.png
+    │   ├── image_comparison_grid_train.png
+    │   ├── image_comparison_grid_valid.png
+    │   ├── latent2D_Aligned_extra_class_labels.png
+    │   ├── latent_dist_extra_class_labels.png
+    │   ├── loss_plot_absolute.png
+    │   ├── loss_plot_relative.png
+    │   ├── translategrid_extra_class_labels.png
+    │   ├── xmodalix_eval_classifier_losses.png
+    │   ├── xmodalix_eval_regression_losses.png
+    │   └── xmodalix_recon_eval_regression_losses.png
+    └── Exp5/
 
-reports/paper-visualizations/Exp4:
-image_comparison_grid_test.png
-image_comparison_grid_train.png
-image_comparison_grid_valid.png
-latent2D_Aligned_extra_class_labels.png
-latent_dist_extra_class_labels.png
-loss_plot_absolute.png
-loss_plot_relative.png
-translategrid_extra_class_labels.png
-xmodalix_eval_classifier_losses.png
-xmodalix_eval_regression_losses.png
-xmodalix_recon_eval_regression_losses.png
-
-reports/paper-visualizations/Exp5:
 ```
 
 
