@@ -15,7 +15,8 @@ sbatch <<EOT
 echo "Doing Experiment 1: beta influence"
 
 # copy cfg in root
-cp ./config_runs/Exp1/Exp1_Annealing_config.yaml .
+cp ./config_runs/Exp1/Exp1_SC_Annealing_config.yaml .
+cp ./config_runs/Exp1/Exp1_TCGA_Annealing_config.yaml .
 # run AUTOENCODIX
 if [ -z "$VIRTUAL_ENV" ];
 then 
@@ -23,23 +24,22 @@ then
 	echo $VIRTUAL_ENV
 fi
 export CUBLAS_WORKSPACE_CONFIG=:16:8
-make visualize RUN_ID=Exp1_Annealing
+make visualize RUN_ID=Exp1_SC_Annealing
+make visualize RUN_ID=Exp1_TCGA_Annealing
 
 # get paper visualization
-cp ./reports/Exp1_Annealing/figures/loss_plot_absolute.png ./reports/paper-visualizations/Exp1
-cp ./reports/Exp1_Annealing/figures/latent_cov_per_epoch.png ./reports/paper-visualizations/Exp1
-cp ./reports/Exp1_Annealing/figures/latent2D_epoch0.png ./reports/paper-visualizations/Exp1
-cp ./reports/Exp1_Annealing/figures/latent2D_epoch300.png ./reports/paper-visualizations/Exp1
-cp ./reports/Exp1_Annealing/figures/latent2D_epoch450.png ./reports/paper-visualizations/Exp1
-cp ./reports/Exp1_Annealing/figures/latent2D_author_cell_type.png ./reports/paper-visualizations/Exp1
+mkdir -p ./reports/paper-visualizations/Exp1
+python src/visualization/Exp1_visualization.py 
+
 
 ## Transfer of paper-visualizations/Exp1 to NextCloud
-nephelai upload-with-fs reports/Exp1_Annealing
+nephelai upload-with-fs reports/Exp1_SC_Annealing
+nephelai upload-with-fs reports/Exp1_TCGA_Annealing
 nephelai upload-with-fs reports/paper-visualizations/Exp1
 
 # clean up
-bash ./clean.sh -r Exp1_Annealing -k -d # Clean up and keep only reports folder
-rm ./Exp1_Annealing_config.yaml
+bash ./clean.sh -r Exp1_SC_Annealing,Exp1_TCGA_Annealing -d -k # Clean up and keep only reports folder
+rm ./Exp1_*_Annealing_config.yaml
 ###################################
 
 exit 0
