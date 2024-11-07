@@ -233,10 +233,10 @@ for dat in dataset:
 
 						if not a == "vanillix": # Vanillix needs not multiple beta runs
 							for b in beta:
-								if (b == 1) and (not a == "varix"):
-									continue ## Skip beta = 1 for other types
-								if a == "stackix":
-									b = round(b*0.1, abs(int(np.log10(b*0.1)))) ## Stackix requires lower beta
+								# if (b == 1) and (not a == "varix"):
+								# 	continue ## Skip beta = 1 for other types
+								# if a == "stackix":
+								# 	b = round(b*0.1, abs(int(np.log10(b*0.1)))) ## Stackix requires lower beta
 								cfg['BETA'] = b
 								if not (a == "stackix" and len(dm_comb) <2):
 									if not (dat == "SC" and "MUT" in "-".join(dm_comb)):

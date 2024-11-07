@@ -2,10 +2,10 @@
 
 #### Getting AUTOENCODIX ready ####
 # # ## clone repo before running script
-# git clone https://git.informatik.uni-leipzig.de/ewald/autoencodix-reproducibility.git # TODO Adjust to Github later
-# cd ./autoencodix # TODO Adjust to repo name later -> autoencodix-reprod?
+# git clone https://github.com/jan-forest/autoencodix-reproducibility.git
+# cd ./autoencodix-reproducibility/ 
 # create or copy a .env for nephelai
-# cp ../../autoencodix/autoencoder/.env ./
+# cp ../../Gitlab/autoencodix-reproducibility/.env ./
 sbatch <<EOT
 #!/bin/bash
 #SBATCH --job-name=autoencoder_build

@@ -10,7 +10,8 @@ To get the results and visualization do the following:
 
 ### 1. Clone the Repo:
 ```bash
-git clone https://git.informatik.uni-leipzig.de/joas/autoencoder.git
+git clone https://github.com/jan-forest/autoencodix-reproducibility.git
+cd autoencodix-reproducibility/
 ```
 ### 2. Run the bash script
 This script will:
