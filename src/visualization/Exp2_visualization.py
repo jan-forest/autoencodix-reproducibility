@@ -111,10 +111,12 @@ arch_order = [
     "varix_B1",
     "varix_B0.1",
     "varix_B0.01",
+    "ontix_B1",
     "ontix_B0.1",
     "ontix_B0.01",
+    "stackix_B1",
+    "stackix_B0.1",
     "stackix_B0.01",
-    "stackix_B0.001",
 ]
 dm_order = ["RNA", "METH", "MUT", "METH+RNA", "MUT+RNA", "METH+MUT", "METH+MUT+RNA"]
 
@@ -242,10 +244,12 @@ arch_plus_order = [
     "varix_B1",
     "varix_B0.1",
     "varix_B0.01",
+    "ontix_B1",
     "ontix_B0.1",
     "ontix_B0.01",
+    "stackix_B1",
+    "stackix_B0.1",
     "stackix_B0.01",
-    "stackix_B0.001",
     "PCA",
     "UMAP",
 ]
