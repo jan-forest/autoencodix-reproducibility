@@ -179,10 +179,16 @@ for dat in dataset:
 
 		for a in arch:
 			cfg['MODEL_TYPE'] = a
+			if a == "ontix":
+				cfg['LAYERS_LOWER_LIMIT'] = 1 # At least one layer necessary to reach latent dim
+				cfg['LAYERS_UPPER_LIMIT'] = 2 # At max 2 FC layer + 2 Sparse decoder layer = 4 layers
 			for d in dim:
 				cfg['LATENT_DIM_FIXED'] = d
 				if d == 29:
 					cfg['NON_ONT_LAYER'] = 0 # if dim < 29 -> 1
+					if t == "tune" and a =="ontix":
+						cfg['LAYERS_LOWER_LIMIT'] = 0
+						cfg['LAYERS_UPPER_LIMIT'] = 0 ## Fix Layers to maintain explainability
 				else:
 					cfg['NON_ONT_LAYER'] = 1
 
