@@ -1,15 +1,5 @@
 #!/bin/bash
-if command -v curl &> /dev/null; then
-    echo "curl is installed"
-    curl -LsSf https://astral.sh/uv/0.5.9/install.sh | sh
-    
-elif command -v wget &> /dev/null; then
-    echo "wget is installed"
-    wget -qO- https://astral.sh/uv/0.5.9/install.sh | sh
-else
-    echo "Please install curl or wget"
-    exit 1
-fi
+
 PYTHON_INTERPRETER=python
 # Function to log messages with timestamp
 log_message() {
@@ -34,16 +24,9 @@ else
     make requirements
 fi
 # Check if PyTorch has CUDA available
-cuda_available=$($PYTHON_INTERPRETER -c "import torch; print(torch.cuda.is_available())")
-log_message "CUDA available: $cuda_available"
+# cuda_available=$($PYTHON_INTERPRETER -c "import torch; print(torch.cuda.is_available())")
+cude_available="False"
 
-# If CUDA is available, export the CUBLAS_WORKSPACE_CONFIG variable
-if [ "$cuda_available" == "True" ]; then
-    export CUBLAS_WORKSPACE_CONFIG=:16:8
-    log_message "CUDA is available. CUBLAS_WORKSPACE_CONFIG is set to :16:8."
-else
-    log_message "CUDA is not available. No changes made."
-fi
 ####################################
 #### Prepare Runs ##################
 log_message "Getting preprocessed data"
@@ -51,6 +34,9 @@ bash ./get_preprocessed_data.sh
 
 log_message "Creating configs"
 $PYTHON_INTERPRETER create_cfg.py
+
+mkdir -p ./reports/paper-visualizations
+
 
 #### Exp5 TCGA and MNIST ####
 log_message "Starting Experiment 5: TCGA and MNIST"
@@ -82,16 +68,13 @@ og_message "Creating GIFs"
 $PYTHON_INTERPRETER eval-xmodalix-scripts/generate_gif.py Exp5_TCGA_MNIST # Corrected to use $PYTHON_INTERPRETER
 log_message "Creating GIFs done"
 # clean up
-bash ./clean.sh Exp5_TCGA_MNIST,Exp5_TCGA_MNISTImggImg true true # Clean up and keep only reports folder
+bash ./clean.sh -r Exp5_TCGA_MNIST,Exp5_TCGA_MNISTImggImg -k -d # Clean up and keep only reports folder
 rm ./Exp5_Exp5_TCGA_MNIST_config.yaml
 rm ./Exp5_Exp5_TCGA_MNISTImgImg_config.yaml
 log_message "Exp5 removed intermediate data"
 
 log_message "Exp5 ALL DONE"
 # Get paper visualization
-log_message "Copying visualizations to reports/paper-visualizations/Exp5"
-cp ./reports/Exp5_TCGA_MNIST/figures/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C.png
-cp ./reports/Exp5_TCGA_MNIST/figures/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D.png
-cp ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D.png
-cp ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C.png
-cp ./reports/Exp5_TCGA_MNIST/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S4.csv
+log_message "Copying visualizations to reports/paper-visualizations/Exp4"
+cp ./reports/Exp5_TCGA_MNIST/figures/* ./reports/paper-visualizations/Exp5
+cp ./reports/Exp5_TCGA_MNIST/*.csv ./reports/paper-visualizations/Exp5

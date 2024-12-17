@@ -1,10 +1,20 @@
 #!/bin/bash
 
-PYTHON_INTERPRETER=python
+PYTHON_INTERPRETER=python3
 # Function to log messages with timestamp
 log_message() {
-	echo "[$(date +"%Y-%m-%d_%H-%M-%S")] $1"
+    echo "[$(date +"%Y-%m-%d_%H-%M-%S")] $1"
 }
+# Check Python version
+PYTHON_VERSION=$($PYTHON_INTERPRETER -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+
+# Compare the extracted version with 3.10
+if [[ "$(printf '%s\n' "$PYTHON_VERSION" "3.10" | sort -V | head -n1)" != "3.10" ]]; then
+    log_message "Error: Python 3.10 or higher is required. Current version is $PYTHON_VERSION. Change Line 3 in this file (run_all_experiments.sh) so that the selected interpreter is >=3.10"
+    exit 1
+fi
+
+log_message "Python version $PYTHON_VERSION verified."
 
 VENV_DIR="venv-gallia"
 REQUIREMENTS_FILE="requirements.txt"
@@ -25,15 +35,14 @@ else
 fi
 # Check if PyTorch has CUDA available
 cuda_available=$($PYTHON_INTERPRETER -c "import torch; print(torch.cuda.is_available())")
-log_message "CUDA available: $cuda_available"
+
 # If CUDA is available, export the CUBLAS_WORKSPACE_CONFIG variable
 if [ "$cuda_available" == "True" ]; then
-	export CUBLAS_WORKSPACE_CONFIG=:16:8
-	log_message "CUDA is available. CUBLAS_WORKSPACE_CONFIG is set to :16:8."
+    export CUBLAS_WORKSPACE_CONFIG=:16:8
+    log_message "CUDA is available. CUBLAS_WORKSPACE_CONFIG is set to :16:8."
 else
-	log_message "CUDA is not available. No changes made."
+    log_message "CUDA is not available. No changes made."
 fi
-
 ####################################
 #### Prepare Runs ##################
 log_message "Getting preprocessed data"
@@ -43,6 +52,7 @@ log_message "Creating configs"
 $PYTHON_INTERPRETER create_cfg.py
 
 mkdir -p ./reports/paper-visualizations
+
 #### Exp4 Celegans and TF Expression ####
 log_message "Starting Experiment 4: Celegans and TF Expression"
 mkdir -p ./reports/paper-visualizations/Exp4
@@ -76,19 +86,15 @@ $PYTHON_INTERPRETER eval-xmodalix-scripts/eval_xmodalix_regression.py Exp4_Celeg
 log_message "Exp4 X-Modalix with regression done"
 
 # Get paper visualization
-
 log_message "Copying visualizations to reports/paper-visualizations/Exp4"
-cp ./reports/Exp4_Celegans_TF/figures/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A.png
-cp ./reports/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
-cp ./reports/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
-cp ./reports/Exp4_Celegans_TF/figures/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B.png
-cp ./reports/Exp4_Celegans_TF/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp4/Table_S3.csv
-
+cp ./reports/Exp4_Celegans_TF/figures/* ./reports/paper-visualizations/Exp4
+cp ./reports/Exp4_Celegans_TF/*.csv ./reports/paper-visualizations/Exp4 
 
 # clean up
-bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
+bash ./clean.sh -r Exp4_Celegans_TF,Exp4_CelegansImgImg -k -d # Clean up and keep only reports folder
 rm ./Exp4_Celegans_TF_config.yaml
 rm ./Exp4_Celegans_TFImgImg_config.yaml
 log_message "Exp4 removed intermediate data"
 
 log_message "Exp4 ALL DONE"
+

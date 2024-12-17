@@ -24,7 +24,7 @@ make create_environment
 source venv-gallia/bin/activate 
 ## make requirements
 make requirements
-pip install nephelai ## For Nextcloud transfer 
+pip3 install nephelai ## For Nextcloud transfer 
 ####################################
 
 #### Prepare Runs ##################
