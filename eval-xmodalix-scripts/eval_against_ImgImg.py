@@ -189,7 +189,7 @@ def create_boxplot(df, split_name, run_id):
     # plt.tight_layout()
     plot_path_boxplot = os.path.join(
         "reports",
-        "paper-visualizations",
+        "figures",
         run_id.split("_")[0],
         f"xmodal_vs_normal_{split_name}_boxplot.png",
     )
@@ -200,7 +200,6 @@ def create_boxplot(df, split_name, run_id):
     df.to_csv(
         os.path.join(
             "reports",
-            "paper-visualizations",
             run_id.split("_")[0],
             f"MSE_xmodale_plotdata_{split_name}.csv",
         )
@@ -220,7 +219,6 @@ def create_split_df_and_plot(df, split_name, run_id, split_df):
 
     output_path = os.path.join(
         "reports",
-        "paper-visualizations",
         run_id.split("_")[0],
         f"MSE_xmodale_{split_name}.csv",
     )
@@ -285,7 +283,7 @@ def create_split_df_and_plot(df, split_name, run_id, split_df):
     # plt.tight_layout()
     plot_path_line = os.path.join(
         "reports",
-        "paper-visualizations",
+        "figures",
         run_id.split("_")[0],
         f"xmodal_vs_normal_{split_name}_line.png",
     )
@@ -334,7 +332,7 @@ def create_split_df_and_plot(df, split_name, run_id, split_df):
     # plt.tight_layout()
     plot_path_scatter = os.path.join(
         "reports",
-        "paper-visualizations",
+        "figures",
         run_id.split("_")[0],
         f"xmodal_vs_normal_{split_name}_scatter.png",
     )
@@ -380,7 +378,7 @@ def create_split_df_and_plot(df, split_name, run_id, split_df):
     # plt.tight_layout()
     plot_path_bar = os.path.join(
         "reports",
-        "paper-visualizations",
+        "figures",
         run_id.split("_")[0],
         f"xmodal_vs_normal_{split_name}_bar.png",
     )
@@ -429,7 +427,7 @@ def create_split_df_and_plot(df, split_name, run_id, split_df):
     # plt.tight_layout()
     plot_path_stem = os.path.join(
         "reports",
-        "paper-visualizations",
+        "figures",
         run_id.split("_")[0],
         f"xmodal_vs_normal_{split_name}_stem.png",
     )
