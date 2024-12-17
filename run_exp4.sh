@@ -120,10 +120,10 @@ cp reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_166.tif ./reports/paper-visualizati
 cp reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_204.tif ./reports/paper-visualizations/Exp4/figure4g/T_204_img_img_to_translated.tif
 
 # do for the original images and use _original suffix data/raw/images/ALY-2_SYS721/
-cp data/raw/images/ALY-2_SYS721/T_16.tif ./reports/paper-visualizations/Exp4/figure4g/T_16_original.tif
-cp data/raw/images/ALY-2_SYS721/T_74.tif ./reports/paper-visualizations/Exp4/figure4g/T_74_original.tif
-cp data/raw/images/ALY-2_SYS721/T_166.tif ./reports/paper-visualizations/Exp4/figure4g/T_166_original.tif
-cp data/raw/images/ALY-2_SYS721/T_204.tif ./reports/paper-visualizations/Exp4/figure4g/T_204_original.tif
+cp data/raw/images/ALY-2_SYS721/ALY-2-SYS721_t16 ./reports/paper-visualizations/Exp4/figure4g/T_16_original.tif
+cp data/raw/images/ALY-2_SYS721/ALY-2-SYS721_t74 ./reports/paper-visualizations/Exp4/figure4g/T_74_original.tif
+cp data/raw/images/ALY-2_SYS721/ALY-2-SYS721_t166 ./reports/paper-visualizations/Exp4/figure4g/T_166_original.tif
+cp data/raw/images/ALY-2_SYS721/ALY-2-SYS721_t204 ./reports/paper-visualizations/Exp4/figure4g/T_204_original.tif
 
 bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
 rm ./Exp4_Celegans_TF_config.yaml
