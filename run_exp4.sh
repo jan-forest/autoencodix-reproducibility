@@ -1,5 +1,14 @@
 #!/bin/bash
-
+if command -v curl &> /dev/null; then
+    echo "curl is installed"
+    curl -LsSf https://astral.sh/uv/0.5.9/install.sh | sh
+elif command -v wget &> /dev/null; then
+    echo "wget is installed"
+    wget -qO- https://astral.sh/uv/0.5.9/install.sh | sh
+else
+    echo "Please install curl or wget"
+    exit 1
+fi
 PYTHON_INTERPRETER=python
 # Function to log messages with timestamp
 log_message() {
@@ -76,14 +85,27 @@ $PYTHON_INTERPRETER eval-xmodalix-scripts/eval_xmodalix_regression.py Exp4_Celeg
 log_message "Exp4 X-Modalix with regression done"
 
 # Get paper visualization
+# analog for Exp4
+
+# mv "./reports/paper-visualizations/Exp5/* " ./reports/paper-visualizations/Exp5/temp
+# # move the below files from temp to the main folder
+# mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C.png
+# mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D.png
+# mv ./reports/paper-visualizations/Exp5/temp/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D.png
+# mv ./reports/paper-visualizations/Exp5/temp/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C.png
+# mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S4.csv
+# # rm -r ./reports/paper-visualizations/Exp5/temp
+
 
 log_message "Copying visualizations to reports/paper-visualizations/Exp4"
-cp ./reports/Exp4_Celegans_TF/figures/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A.png
-cp ./reports/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
-cp ./reports/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
-cp ./reports/Exp4_Celegans_TF/figures/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B.png
-cp ./reports/Exp4_Celegans_TF/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp4/Table_S3.csv
 
+mkdir -p ./reports/paper-visualizations/Exp4/temp
+mv ./reports/paper-visualizations/Exp4/* ./reports/paper-visualizations/Exp4/temp
+mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A.png
+mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B.png
+mv ./reports/paper-visualizations/Exp4/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp4/Table_S3.csv
+mv ./reports/paper-visualizations/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
+mv ./reports/paper-visualizations/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
 
 # clean up
 bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
@@ -92,3 +114,5 @@ rm ./Exp4_Celegans_TFImgImg_config.yaml
 log_message "Exp4 removed intermediate data"
 
 log_message "Exp4 ALL DONE"
+
+

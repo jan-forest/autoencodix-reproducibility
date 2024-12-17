@@ -281,13 +281,14 @@ def plot_losses(
     plt.grid(True)
     # plt.tight_layout()
     plt.savefig(
-        os.path.join("reports", "figures", run_id.split("_")[0], outpath)
+        os.path.join("reports", "paper-visualizations", run_id.split("_")[0], outpath)
     )
     plt.close()
     # save underlying data for plot:
     pd.DataFrame({"train_losses": train_losses, "val_losses": val_losses}).to_csv(
         os.path.join(
             "reports",
+            "paper-visualizations",
             run_id.split("_")[0],
             f"{outpath}.csv",
         ),
@@ -490,18 +491,68 @@ def main(run_id):
     metrics_df.to_csv(
         os.path.join(
             "reports",
+            "paper-visualizations",
             RUN_ID.split("_")[0],
             "xmodalix_eval_classifier_metrics.csv",
         ),
         index=False,
     )
 
+    print("\nPerformance Comparison:")
+    print(metrics_df)
 
+    # print("\nDetailed Performance:")
+    # print(f"Original Train Set Accuracy: {train_accuracy:.4f}")
+    # print(f"Original Train Set F1 score: {train_f1:.4f}")
+    # print(f"Original confusion matrix:\n{conf_matrix_original}")
+    # print("-------------------------------------\n")
+
+    # print(f"Reconstructed Train Set Accuracy: {train_accuracy_reconstructed:.4f}")
+    # print(f"Reconstructed Train Set F1 score: {train_f1_reconstructed:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(f"Original Validation Set Accuracy: {valid_accuracy:.4f}")
+    # print(f"Original Validation Set F1 score: {valid_f1:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(f"Reconstructed Validation Set Accuracy: {valid_accuracy_reconstructed:.4f}")
+    # print(f"Reconstructed Validation Set F1 score: {valid_f1_reconstructed:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(f"Original Test Set Accuracy: {accuracy_original:.4f}")
+    # print(f"Original Test Set F1 score: {f1_original:.4f}")
+    # print(f"Original confusion matrix:\n{conf_matrix_original}")
+    # print("-------------------------------------\n")
+
+    # print(f"Reconstructed Test Set Accuracy: {accuracy_reconstructed:.4f}")
+    # print(f"Reconstructed Test Set F1 score: {f1_reconstructed:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(
+    #     f"Reconstructed Test Set Trained on Reconstructed Accuracy: {accuracy_t_reconstructed:.4f}"
+    # )
+    # print(
+    #     f"Reconstructed Test Set Trained on Reconstructed F1 score: {f1_t_reconstructed:.4f}"
+    # )
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_t_reconstructed}")
+    # print("-------------------------------------\n")
+    # print(f"Test set F1 score difference: {f1_original - f1_reconstructed:.4f}")
+    # print(
+    #     f"Test Set trained on reconstructed F1 score difference: {f1_original - f1_t_reconstructed:.4f}"
+    # )
+
+    # print("\nClass Distribution:")
+    # print(counts_df)
 
     torch.save(
         model.state_dict(),
         os.path.join(
             "reports",
+            "paper-visualizations",
             RUN_ID.split("_")[0],
             "cnn_classifier.pth",
         ),

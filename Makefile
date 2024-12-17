@@ -4,7 +4,6 @@
 # GLOBALS                                                                       #
 #################################################################################
 
-curl -LsSf https://astral.sh/uv/0.5.9/install.sh | sh
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default

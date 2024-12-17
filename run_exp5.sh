@@ -90,8 +90,15 @@ log_message "Exp5 removed intermediate data"
 log_message "Exp5 ALL DONE"
 # Get paper visualization
 log_message "Copying visualizations to reports/paper-visualizations/Exp5"
-cp ./reports/Exp5_TCGA_MNIST/figures/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C.png
-cp ./reports/Exp5_TCGA_MNIST/figures/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D.png
-cp ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D.png
-cp ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C.png
-cp ./reports/Exp5_TCGA_MNIST/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S4.csv
+mkdir -p ./reports/paper-visualizations/Exp5/temp
+mv ./reports/paper-visualizations/Exp5/* ./reports/paper-visualizations/Exp5/temp
+# move the below files from temp to the main folder
+mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C.png
+mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D.png
+mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S4.csv
+mv ./reports/paper-visualizations/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C.png
+mv ./reports/paper-visualizations/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D.png
+
+# rm -r ./reports/paper-visualizations/Exp5/temp
+
+

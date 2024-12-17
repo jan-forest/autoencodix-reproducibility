@@ -266,13 +266,13 @@ def plot_losses(
     plt.grid(True)
     # plt.tight_layout()
     plt.savefig(
-        os.path.join("reports", "figures", run_id.split("_")[0], file_name)
+        os.path.join("reports", "paper-visualizations", run_id.split("_")[0], file_name)
     )
     plt.close()
     # also save underlying data for plots
     pd.DataFrame({"train_losses": train_losses, "val_losses": val_losses}).to_csv(
         os.path.join(
-            "reports", run_id.split("_")[0], f"{file_name}.csv"
+            "reports", "paper-visualizations", run_id.split("_")[0], f"{file_name}.csv"
         ),
         index=False,
     )
@@ -432,6 +432,7 @@ def main(run_id):
     metrics_df.to_csv(
         os.path.join(
             "reports",
+            "paper-visualizations",
             RUN_ID.split("_")[0],
             "xmodalix_eval_regression_metrics.csv",
         ),

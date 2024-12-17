@@ -153,11 +153,15 @@ log_message "Exp4 X-Modalix with regression done"
 
 # Get paper visualization
 log_message "Copying visualizations to reports/paper-visualizations/Exp4"
-cp ./reports/Exp4_Celegans_TF/figures/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A.png
-cp ./reports/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
-cp ./reports/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
-cp ./reports/Exp4_Celegans_TF/figures/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B.png
-cp ./reports/Exp4_Celegans_TF/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp4/Table_S3.csv
+
+mkdir -p ./reports/paper-visualizations/Exp4/temp
+mv ./reports/paper-visualizations/Exp4/* ./reports/paper-visualizations/Exp4/temp
+mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A.png
+mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B.png
+mv ./reports/paper-visualizations/Exp4/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp4/Table_S3.csv
+mv ./reports/paper-visualizations/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
+mv ./reports/paper-visualizations/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
+
 
 
 # clean up
@@ -207,8 +211,12 @@ log_message "Exp5 removed intermediate data"
 log_message "Exp5 ALL DONE"
 # Get paper visualization
 log_message "Copying visualizations to reports/paper-visualizations/Exp5"
-cp ./reports/Exp5_TCGA_MNIST/figures/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C.png
-cp ./reports/Exp5_TCGA_MNIST/figures/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D.png
-cp ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D.png
-cp ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C.png
-cp ./reports/Exp5_TCGA_MNIST/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S4.csv
+mkdir -p ./reports/paper-visualizations/Exp5/temp
+mv ./reports/paper-visualizations/Exp5/* ./reports/paper-visualizations/Exp5/temp
+# move the below files from temp to the main folder
+mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C.png
+mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D.png
+mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S4.csv
+mv ./reports/paper-visualizations/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C.png
+mv ./reports/paper-visualizations/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D.png
+
