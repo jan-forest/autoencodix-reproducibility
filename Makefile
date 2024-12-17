@@ -1,4 +1,5 @@
 .PHONY: clean data lint requirements sync_data_to_s3 sync_data_from_s3
+.SILENT:
 
 #################################################################################
 # GLOBALS                                                                       #
@@ -23,6 +24,7 @@ HAS_CONDA=True
 endif
 
 
+
 # create configs dir if not exists
 #################################################################################
 # COMMANDS                                                                      #
@@ -33,6 +35,7 @@ endif
 requirements: test_environment
 	uv pip install -e .
 	uv pip install -r requirements.txt
+
 	touch src/utils/__init__.py
 	touch src/data/__init__.py
 	touch src/features/__init__.py
@@ -59,16 +62,21 @@ config:
 	# if not, copy config.yaml to run_id_config.yaml
 	# if yes copy the existing run_id_config.yaml to reports/$(RUN_ID)/$(RUN_ID)_config.yaml
 	if [ ! -f $(RUN_ID)_config.yaml ]; then \
-		sed -i '' '/RUN_ID/d' config.yaml; \
+		sed -i '/RUN_ID/d' config.yaml; \
+		# echo -en '\n' >> config.yaml; \
 		echo "RUN_ID: $(RUN_ID)" >> config.yaml; \
+		# sed -i "/^\([[:space:]]*RUN_ID: \).*/s//\1$(RUN_ID)/" config.yaml; \
 		cp config.yaml reports/$(RUN_ID)/$(RUN_ID)_config.yaml; \
 	fi
 	if [ -f $(RUN_ID)_config.yaml ]; then \
-		sed -i '' '/RUN_ID/d' $(RUN_ID)_config.yaml; \
+		# echo -en '\n' >> $(RUN_ID)_config.yaml; \
+		sed -i '/RUN_ID/d' $(RUN_ID)_config.yaml; \
 		echo "RUN_ID: $(RUN_ID)" >> $(RUN_ID)_config.yaml; \
+		# sed -i "/^\([[:space:]]*RUN_ID: \).*/s//\1$(RUN_ID)/" $(RUN_ID)_config.yaml; \
 		cp $(RUN_ID)_config.yaml reports/$(RUN_ID)/$(RUN_ID)_config.yaml; \
 	fi
-	echo "done config"
+
+	echo "done config"\
 
 
 
@@ -91,7 +99,7 @@ else
 	mkdir -p data/external
 
 	# download the zip archive containing CDS length data, reactome pathway-gene sets etc.
-	wget -P data/external https://cloud.scadsai.uni-leipzig.de/index.php/s/i2FFoi2jojBfwc4/download/piscore_external_data.zip
+	wget -nv -P data/external https://cloud.scadsai.uni-leipzig.de/index.php/s/i2FFoi2jojBfwc4/download/piscore_external_data.zip
 
 	# unzip the archive
 	unzip data/external/piscore_external_data.zip -d data/external
@@ -114,7 +122,7 @@ else
 	mkdir -p data/external
 
 	# download the zip archive containing CDS length data, reactome pathway-gene sets etc.
-	wget -P data/external https://cloud.scadsai.uni-leipzig.de/index.php/s/i2FFoi2jojBfwc4/download/piscore_external_data.zip
+	wget -nv -P data/external https://cloud.scadsai.uni-leipzig.de/index.php/s/i2FFoi2jojBfwc4/download/piscore_external_data.zip
 
 	# unzip the archive
 	unzip data/external/piscore_external_data.zip -d data/external
@@ -129,17 +137,17 @@ else
 	rm -r data/external
 endif
 
-ontology_prep:
+ontology_prep: config
 ifneq ("$(wildcard data/raw/full_ont_lvl1_reactome.txt)","")
 	echo "Ontology already prepared. Skipping prep."
 else
-	wget -P data/raw https://reactome.org/download/current/ReactomePathwaysRelation.txt
-	wget -P data/raw https://reactome.org/download/current/NCBI2Reactome_All_Levels.txt
-	wget -P data/raw https://reactome.org/download/current/Ensembl2Reactome_All_Levels.txt
+	wget -nv -P data/raw https://reactome.org/download/current/ReactomePathwaysRelation.txt
+	wget -nv -P data/raw https://reactome.org/download/current/NCBI2Reactome_All_Levels.txt
+	wget -nv -P data/raw https://reactome.org/download/current/Ensembl2Reactome_All_Levels.txt
 	$(PYTHON_INTERPRETER) src/data/make_ontology.py $(RUN_ID)
 	rm data/raw/ReactomePathwaysRelation.txt
 	rm data/raw/NCBI2Reactome_All_Levels.txt
-	rm data/raw/Ensembl2Reactformaome_All_Levels.txt
+	rm data/raw/Ensembl2Reactome_All_Levels.txt
 endif
 	echo "done ontology prep"
 
@@ -155,6 +163,7 @@ data: config
 data_only: config
 	$(PYTHON_INTERPRETER) src/data/make_dataset.py $(RUN_ID)
 	echo "done data only"
+
 
 model: data
 	$(PYTHON_INTERPRETER) src/models/train.py $(RUN_ID)
@@ -190,6 +199,7 @@ train_n_visualize: config
 ml_task: visualize
 	$(PYTHON_INTERPRETER) src/visualization/ml_task.py $(RUN_ID)
 	echo "Done ml_task"
+    
 ml_task_only: config
 	$(PYTHON_INTERPRETER) src/visualization/ml_task.py $(RUN_ID)
 	echo "Done Ml task only"
@@ -203,10 +213,8 @@ clean:
 lint:
 	flake8 src
 
-
 ## Set up python interpreter environment
 create_environment:
-	# test that python is 3.10 or greater, if not exit with error and message
 	uv venv $(PROJECT_NAME) --python 3.10
 	@echo ">>> New virtualenv created. Activate with:\nsource $(PROJECT_NAME)/bin/activate"
 

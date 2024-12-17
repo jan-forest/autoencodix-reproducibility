@@ -104,8 +104,8 @@ mv ./reports/paper-visualizations/Exp4/* ./reports/paper-visualizations/Exp4/tem
 mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A.png
 mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B.png
 mv ./reports/paper-visualizations/Exp4/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp4/Table_S3.csv
-mv ./reports/paper-visualizations/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
-mv ./reports/paper-visualizations/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
+mv ./reports/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
+mv ./reports/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
 
 # clean up
 bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
