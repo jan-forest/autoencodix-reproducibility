@@ -5,7 +5,7 @@
 
 
 # PAPER README
-This repo shows how to create all results of the paper in a reproducible way.
+This repo shows how to create all results of the manuscript https://www.biorxiv.org/ [TODO] in a reproducible way.
 To get the results and visualization do the following:
 
 ### 1. Clone the Repo:
@@ -31,21 +31,18 @@ This will create the following output structure (to keep things neat not all fil
 reports/
 └── paper-visualizations/
     ├── Exp1/
-    │   ├── latent2D_CANCER_TYPE_ACRONYM.png
-    │   ├── latent2D_epoch0.png
-    │   ├── latent_cov_per_epoch.png
-    |   ├── latent2D_author_cell_type
-    │   └── loss_plot_absolute.png
-    │   └── ...
+    │   ├── Exp1_SC_summary.png
+    │   ├── Exp1_TCGA_summary.png
     ├── Exp2/
-    │   ├── Exp2_Fig3A_reconcap.png
-    │   ├── Exp2_Fig3BC_embeddingcap.png
-    │   ├── Exp2_Fig4A_totallossimprovement.png
+    │   ├── df_results.txt
+    │   ├── ml_results.txt
+    │   ├── Exp2_Fig2C_recon_dense.png
+    │   ├── Exp2_SuppFig_hyperparam-linear.png
     │   └── ...
     ├── Exp3/
-    │   ├── example_latent_dist_SC_Chr_author_cell_type.png
-    │   ├── example_latent_dist_SC_Rea_age_group.png
-    │   ├── Ontix_beta_SC.png
+    │   ├── df_robust_TCGA.txt
+    │   ├── ml_results_TCGA.txt
+    │   ├── Ontix_robustness_TCGA.png
     │   └── ...
     ├── Exp4/
     │   ├── image_comparison_grid_test.png
@@ -61,7 +58,7 @@ reports/
 
 ```
 ### Warning
-The script `./run_all_experiments.sh` will run for days (depending on your hardware). A more suitable way would be to run the scripts on a High Performance Compute Cluster (HPC). We provide the following scripts:
+The script `./run_all_experiments.sh` will run for days or even weeeks (depending on your hardware). A more suitable way would be to run the scripts on a High Performance Compute Cluster (HPC). We provide the following scripts:
 ```
 .
 ├── run_SC-UL_prerun.sh
