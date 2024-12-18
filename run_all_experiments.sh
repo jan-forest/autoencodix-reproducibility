@@ -162,23 +162,23 @@ mv ./reports/paper-visualizations/Exp4/temp/xmodalix_eval_classifier_metrics.csv
 mv ./reports/Exp4_Celegans_TF/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4_H.png
 mv ./reports/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G.png
 
- # figure4g
-mkdir -p ./reports/paper-visualizations/Exp4/figure4g
-cp ./reports/Exp4_Celegans_TF/IMGS/T_16.tif ./reports/paper-visualizations/Exp4/figure4g/T_16_translated.tif
-cp ./reports/Exp4_Celegans_TF/IMGS/T_74.tif ./reports/paper-visualizations/Exp4/figure4g/T_74_translated.tif
-cp ./reports/Exp4_Celegans_TF/IMGS/T_166.tif ./reports/paper-visualizations/Exp4/figure4g/T_166_translated.tif
-cp reports/Exp4_Celegans_TF/IMGS/T_204.tif ./reports/paper-visualizations/Exp4/figure4g/T_204_translated.tif
+ # Figure_4_h
+mkdir -p ./reports/paper-visualizations/Exp4/Figure_4_h
+cp ./reports/Exp4_Celegans_TF/IMGS/T_16.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_16_translated.tif
+cp ./reports/Exp4_Celegans_TF/IMGS/T_74.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_74_translated.tif
+cp ./reports/Exp4_Celegans_TF/IMGS/T_166.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_166_translated.tif
+cp reports/Exp4_Celegans_TF/IMGS/T_204.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_204_translated.tif
 # do from the IMGS_IMG folder and add _img_img_to_translated suffix
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_16.tif ./reports/paper-visualizations/Exp4/figure4g/T_16_img_img_to_translated.tif
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_74.tif ./reports/paper-visualizations/Exp4/figure4g/T_74_img_img_to_translated.tif
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_166.tif ./reports/paper-visualizations/Exp4/figure4g/T_166_img_img_to_translated.tif
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_204.tif ./reports/paper-visualizations/Exp4/figure4g/T_204_img_img_to_translated.tif
+cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_16.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_16_img_img_to_translated.tif
+cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_74.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_74_img_img_to_translated.tif
+cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_166.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_166_img_img_to_translated.tif
+cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_204.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_204_img_img_to_translated.tif
 
 # do for the original images and use _original suffix data/raw/images/ALY-2_SYS721/
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t16.tif ./reports/paper-visualizations/Exp4/figure4g/T_16_original.tif
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t74.tif ./reports/paper-visualizations/Exp4/figure4g/T_74_original.tif
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t166.tif ./reports/paper-visualizations/Exp4/figure4g/T_166_original.tif
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t204.tif ./reports/paper-visualizations/Exp4/figure4g/T_204_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t16.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_16_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t74.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_74_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t166.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_166_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t204.tif ./reports/paper-visualizations/Exp4/Figure_4_h/T_204_original.tif
 
 bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
 rm ./Exp4_Celegans_TF_config.yaml
