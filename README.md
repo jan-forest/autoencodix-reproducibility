@@ -25,6 +25,9 @@ Run:
 ```bash
 ./run_all_experiments.sh
 ```
+NOTE:
+Apple Mac users need to run this command first:
+`mv Makefile_macos Makefile`
 
 This will create the following output structure (to keep things neat not all files are shown here):
 ```
@@ -45,20 +48,19 @@ reports/
     │   ├── Ontix_robustness_TCGA.png
     │   └── ...
     ├── Exp4/
-    │   ├── image_comparison_grid_test.png
-    │   ├── image_comparison_grid_train.png
-    │   ├── image_comparison_grid_valid.png
-    │   ├── latent2D_Aligned_extra_class_labels.png
-    │   ├── latent_dist_extra_class_labels.png
-    │   ├── loss_plot_absolute.png
+    │   ├── Figure_4_H_Celegans_Grid/
+    │   ├── Figure_4_G_rel_loss_Exp_4.png
+    │   ├── Table_S4_R2_values_Exp_4.csv
     │   └── ...
     └── Exp5/
-    │   └── image_comparison_grid_test
-    │   └── ....
+    │   └── Figure_S5_C_MSE_Boxplot_Exp_5.png
+    │   └── Figure_4_C_rel_loss_Exp_5.png
+    │   └── ...
+    
 
 ```
 ### Warning
-The script `./run_all_experiments.sh` will run for days or even weeeks (depending on your hardware). A more suitable way would be to run the scripts on a High Performance Compute Cluster (HPC). We provide the following scripts:
+The script `./run_all_experiments.sh` will run for days or even weeks (depending on your hardware). A more suitable way would be to run the scripts on a High-Performance Compute Cluster (HPC). We provide the following scripts:
 ```
 .
 ├── run_SC-UL_prerun.sh
@@ -73,16 +75,15 @@ INSTRUCTION:
 
 - These scripts have a specific slurm configuration that might not work on your HPC. So before starting the scripts, search `#SBATCH` inside each script and configure according to your system
 - The `run_SC-UL_prerun.sh` needs to run before all other scripts once to get the data and setup the environment, etc.
-- The scripts `run_SC-UL_exp2.sh` and `run_SC-UL_exp3.sh` needs to be started with the command:
-    - `bash run_SC-UL_exp2.sh` and  `bash run_SC-UL_exp3.sh`
-    - the other scrips can be sent the "normal" way to your slurm cluster via `sbatch <script.sh>`
+- The scripts `run_SC-UL_exp<N>.sh` need to be started with the command:
+    - `bash run_SC-UL_exp<N>.sh
  - The scripts will attempt to upload the results to a nextcloud, this will fail for you, because you don't have our nextcloud credentials in your .env file. So the error can be ignored and does not interfere with result generation.
 
   
 
 # Normal README AUTOENCODIX
 
-Autoencoders are deep-learning based networks for dimension reduction and embedding by a combination of compressing encoder and decoder structure for non-linear and multi-modal data integration with promising application to complex biological data from large-scale omics measurements. Current ongoing research and publication provide many exciting architectures and implementations of autoencoders. However, there is a lack of easy-to-use and unified implementation covering the whole pipeline of autoencoder application.
+Autoencoders are deep-learning-based networks for dimension reduction and embedding by a combination of compressing encoder and decoder structure for non-linear and multi-modal data integration with promising application to complex biological data from large-scale omics measurements. Current ongoing research and publication provide many exciting architectures and implementations of autoencoders. However, there is a lack of easy-to-use and unified implementation covering the whole pipeline of autoencoder applications.
 Consequently, we present `AUTOENCODIX` with the following features:
 - Multi-modal data integration for any numerical or categorical data
 - Different autoencoder architectures:
@@ -204,7 +205,7 @@ All scripts will download the data, create necessary `yaml`-configs and run the 
 
 ### 2.3 Working with own data and config files
 
-To work with our framework you first need to make sure that it has following format as described in details in the [tutorial](Tutorials/Setup_InputFormat.ipynb):
+To work with our framework you first need to make sure that it has the following format as described in details in the [tutorial](Tutorials/Setup_InputFormat.ipynb):
 - for each data modality either a text-file (`csv`,`tsv`,`txt`) or `.parquet`-file with samples as rows and features as columns
 - we recommend an `ANNOTATION`-file in the same format containing clinical parameter or other sample meta-data for visualization
 - As described in the tutorials provide ontologies or image-mapping files to work with [`ontix`](Tutorials/Advanced_Ontix.ipynb) or [`x-modalix`](Tutorials/Advanced_Xmodalix.ipynb)
