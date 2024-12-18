@@ -112,6 +112,7 @@ cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t16.tif ./reports/paper-visualiza
 cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t74.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_74_original.tif
 cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t166.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_166_original.tif
 cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t204.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_204_original.tif
+rm -r ./reports/paper-visualizations/Exp4/temp
 
 bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
 rm ./Exp4_Celegans_TF_config.yaml

@@ -97,6 +97,8 @@ mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./repo
 mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S5_F1_Classifier.csv
 mv ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C_rel_loss_Exp_5.png
 mv ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D_Digit_Grid.png
+rm -r ./reports/paper-visualizations/Exp5/temp
+
 
 log_message "Exp5 ALL DONE"
 # rm -r ./reports/paper-visualizations/Exp5/temp

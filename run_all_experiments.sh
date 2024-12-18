@@ -179,6 +179,7 @@ cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t16.tif ./reports/paper-visualiza
 cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t74.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_74_original.tif
 cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t166.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_166_original.tif
 cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t204.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_204_original.tif
+rm -r ./reports/paper-visualizations/Exp4/temp
 
 bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
 rm ./Exp4_Celegans_TF_config.yaml
@@ -244,6 +245,7 @@ mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./repo
 mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S5_F1_Classifier.csv
 mv ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C_rel_loss_Exp_5.png
 mv ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D_Digit_Grid.png
+rm -r ./reports/paper-visualizations/Exp5/temp
 
 log_message "Exp5 ALL DONE"
 #
