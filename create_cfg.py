@@ -466,7 +466,7 @@ cfg['MODEL_TYPE'] = "x-modalix"
 cfg['BETA'] = 0.01
 cfg["GAMMA"] = 1.25
 cfg["ROOT_IMAGE"] = "data/raw/images/ALY-2_SYS721/"
-cfg['SPLIT'] = [0.8, 0.0, 0.2]
+cfg['SPLIT'] = [0.7, 0.2, 0.1]
 # X-modalix specific
 cfg["DELTA_PAIR"] = 0.7
 cfg["DELTA_CLASS"] = 0.0
@@ -596,7 +596,7 @@ cfg['GAMMA'] = 10
 cfg["ROOT_IMAGE"] = "data/raw/images/tcga_fake/"
 cfg['DROP_P'] = 0.5
 
-cfg['SPLIT'] = [0.8, 0.0, 0.2]
+cfg['SPLIT'] = [0.7, 0.2, 0.1]
 # X-modalix specific
 cfg["DELTA_PAIR"] = 0
 cfg["DELTA_CLASS"] = 10
