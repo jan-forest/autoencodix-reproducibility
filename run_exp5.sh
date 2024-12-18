@@ -78,7 +78,7 @@ $PYTHON_INTERPRETER eval-xmodalix-scripts/eval_xmodalix.py Exp5_TCGA_MNIST # Cor
 log_message "Eval xmodalix with classification done"
 
 #### SKIPPING THIS PART FOR TCGA BECAUSE WE HAVE NO TIMESEREIS DATA
-og_message "Creating GIFs"
+log_message "Creating GIFs"
 $PYTHON_INTERPRETER eval-xmodalix-scripts/generate_gif.py Exp5_TCGA_MNIST # Corrected to use $PYTHON_INTERPRETER
 log_message "Creating GIFs done"
 # clean up
@@ -87,7 +87,6 @@ rm ./Exp5_Exp5_TCGA_MNIST_config.yaml
 rm ./Exp5_Exp5_TCGA_MNISTImgImg_config.yaml
 log_message "Exp5 removed intermediate data"
 
-log_message "Exp5 ALL DONE"
 # Get paper visualization
 log_message "Copying visualizations to reports/paper-visualizations/Exp5"
 mkdir -p ./reports/paper-visualizations/Exp5/temp
@@ -99,6 +98,5 @@ mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv
 mv ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C_rel_loss_Exp_5.png
 mv ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D_Digit_Grid.png
 
+log_message "Exp5 ALL DONE"
 # rm -r ./reports/paper-visualizations/Exp5/temp
-
-
