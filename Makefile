@@ -12,15 +12,9 @@ PROJECT_NAME = venv-gallia
 PYTHON_INTERPRETER = python
 RUN_ID = $1
 OLD_RUN_ID = $2
-PYV = $(shell $(PYTHON_INTERPRETER) -c "import sys;t='{v[0]}.{v[1]}'.format(v=list(sys.version_info[:2]));sys.stdout.write(t)")
-# convert to integer
 
 # HELPERS TO CONTROL PYTHON VERSIONS --------------------------------------------------------
 # Function to convert version numbers to a numeric representation
-version = $(shell echo "$1" | awk -F. '{ printf("%d%03d%03d%03d\n", $$1,$$2,$$3,$$4); }')
-PYV_FORMATED = $(call version,$(PYV))
-MIN_PYV = "3.10"
-MIN_PYV_FORMATED = $(call version,$(MIN_PYV))
 # -------------------------------------------------------------------------------------------
 
 ifeq (,$(shell which conda))
@@ -39,10 +33,9 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	# $(PYTHON_INTERPRETER) -m pip install build
-	# $(PYTHON_INTERPRETER) -m build --sdist
-	$(PYTHON_INTERPRETER) -m pip install -e .
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	uv pip install -e .
+	uv pip install -r requirements.txt
+
 	touch src/utils/__init__.py
 	touch src/data/__init__.py
 	touch src/features/__init__.py
@@ -222,19 +215,7 @@ lint:
 
 ## Set up python interpreter environment
 create_environment:
-	# test that python is 3.10 or greater, if not exit with error and message
-	@echo ">>> Python version is ${PYV}"
-	@echo ">>> Checking your python version"
-	@echo ">>> Python version formated is ${PYV_FORMATED}"
-	@echo ">>> Minimum Python version formated is ${MIN_PYV_FORMATED}"
-	@if [ $(PYV_FORMATED) -lt $(MIN_PYV_FORMATED) ]; then \
-		echo ">>> ERROR: Python version must be at least $(MIN_PYV)"; \
-		exit 1; \
-	else \
-		echo ">>> Python version is good"; \
-	fi
-	$(PYTHON_INTERPRETER) -m pip install virtualenv
-	$(PYTHON_INTERPRETER) -m venv $(PROJECT_NAME)
+	uv venv $(PROJECT_NAME) --python 3.10
 	@echo ">>> New virtualenv created. Activate with:\nsource $(PROJECT_NAME)/bin/activate"
 
 

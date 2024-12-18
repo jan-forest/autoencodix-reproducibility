@@ -19,12 +19,24 @@ sbatch <<EOT
 #SBATCH --mem=32G
 
 ## create env
+#!/bin/bash
+if command -v curl &> /dev/null; then
+    echo "curl is installed"
+    curl -LsSf https://astral.sh/uv/0.5.9/install.sh | sh
+    
+elif command -v wget &> /dev/null; then
+    echo "wget is installed"
+    wget -qO- https://astral.sh/uv/0.5.9/install.sh | sh
+else
+    echo "Please install curl or wget"
+    exit 1
+fi
 make create_environment
 ## activate env
 source venv-gallia/bin/activate 
 ## make requirements
 make requirements
-pip install nephelai ## For Nextcloud transfer 
+uv pip install nephelai ## For Nextcloud transfer 
 ####################################
 
 #### Prepare Runs ##################

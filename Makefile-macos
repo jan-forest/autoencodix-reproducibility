@@ -11,9 +11,11 @@ PROJECT_NAME = venv-gallia
 PYTHON_INTERPRETER = python
 RUN_ID = $1
 OLD_RUN_ID = $2
-# convert to integer
 
+# HELPERS TO CONTROL PYTHON VERSIONS --------------------------------------------------------
+# Function to convert version numbers to a numeric representation
 # -------------------------------------------------------------------------------------------
+
 ifeq (,$(shell which conda))
 HAS_CONDA=False
 else
@@ -137,7 +139,7 @@ else
 	$(PYTHON_INTERPRETER) src/data/make_ontology.py $(RUN_ID)
 	rm data/raw/ReactomePathwaysRelation.txt
 	rm data/raw/NCBI2Reactome_All_Levels.txt
-	rm data/raw/Ensembl2Reactome_All_Levels.txt
+	rm data/raw/Ensembl2Reactformaome_All_Levels.txt
 endif
 	echo "done ontology prep"
 
@@ -204,6 +206,7 @@ lint:
 
 ## Set up python interpreter environment
 create_environment:
+	# test that python is 3.10 or greater, if not exit with error and message
 	uv venv $(PROJECT_NAME) --python 3.10
 	@echo ">>> New virtualenv created. Activate with:\nsource $(PROJECT_NAME)/bin/activate"
 

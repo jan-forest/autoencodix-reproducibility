@@ -32,8 +32,8 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	$(PYTHON_INTERPRETER) -m pip install -e .
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+	$(PYTHON_INTERPRETER) -m pip3 install -e .
+	$(PYTHON_INTERPRETER) -m pip3 install -r requirements.txt
 	powershell -Command "New-Item -ItemType File -Force src/utils/__init__.py"
 	powershell -Command "New-Item -ItemType File -Force src/data/__init__.py"
 	powershell -Command "New-Item -ItemType File -Force src/features/__init__.py"
@@ -194,7 +194,7 @@ create_environment:
 	) else ( \
 		echo Python version is good \
 	)"
-	@$(PYTHON_INTERPRETER) -m pip install virtualenv
+	@$(PYTHON_INTERPRETER) -m pip3 install virtualenv
 	@$(PYTHON_INTERPRETER) -m venv $(PROJECT_NAME)
 	@echo ">>> New virtualenv created. Activate with: $(PROJECT_NAME)\Scripts\activate"
 
