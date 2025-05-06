@@ -5,6 +5,7 @@
 
 
 # PAPER README
+Repo of first submissionjj:
 This repo recreates all results of the [AUTOENCODIX preprint](https://doi.org/10.1101/2024.12.17.628906) and related models and plots.
 To get the results and visualization do the following:
 
