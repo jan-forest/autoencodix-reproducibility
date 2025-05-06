@@ -16,7 +16,7 @@ for config in ./Exp1*_config.yaml; do
 	#SBATCH --ntasks-per-node=1
 	#SBATCH --cpus-per-task=8
 	#SBATCH --partition=clara
-	#SBATCH --time="$runtime":00:00
+	#SBATCH --time=04:00:00
 	#SBATCH --mem=64G
 	#SBATCH --gres=gpu:rtx2080ti:1
 	if [ -z "$VIRTUAL_ENV" ];
