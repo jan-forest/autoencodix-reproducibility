@@ -31,14 +31,16 @@ def get_layer_dim(feature_dim, latent_dim, n_layers, enc_factor):
 class Vanillix(nn.Module):
     """A class to define a Vanilla Autoencoder"""
 
-    def __init__(self, input_dim, latent_dim, global_p=0.1):
+    def __init__(self, input_dim, latent_dim, global_p=0.1, n_layers=2, enc_factor=4):
         super(Vanillix, self).__init__()
         # Model attributes
         self.input_dim = input_dim
         assert input_dim > 4, "input_dim must be greater than 4"
-        self.n_layers = 2
+        # self.n_layers = 2
+        self.n_layers = n_layers
         self.global_p = global_p
-        self.enc_factor = 4
+        # self.enc_factor = 4
+        self.enc_factor = enc_factor
         self.latent_dim = latent_dim
 
         # Building architecture
@@ -90,14 +92,16 @@ class Vanillix(nn.Module):
 class Varix(nn.Module):
     """A class to define a VAE model"""
 
-    def __init__(self, input_dim, latent_dim, global_p=0.1):
+    def __init__(self, input_dim, latent_dim, global_p=0.1, n_layers=2, enc_factor=4):
         super(Varix, self).__init__()
         # Model attributes
         self.input_dim = input_dim
         assert input_dim > 4, "input_dim must be greater than 4"
-        self.n_layers = 2
+        # self.n_layers = 2
+        self.n_layers = n_layers
         self.global_p = global_p
-        self.enc_factor = 4
+        # self.enc_factor = 4
+        self.enc_factor = enc_factor
         self.latent_dim = latent_dim
 
         # Building architecture
@@ -163,14 +167,16 @@ class Varix(nn.Module):
 class Stackix(nn.Module):
     """A class to define a stacked or hierarchical Autoencoder"""
 
-    def __init__(self, input_dim, latent_dim, global_p=0.1):
+    def __init__(self, input_dim, latent_dim, global_p=0.1, n_layers=2, enc_factor=4):
         super(Stackix, self).__init__()
         # Model attributes
         self.input_dim = input_dim
         assert input_dim > 4, "input_dim must be greater than 4"
-        self.n_layers = 2
+        # self.n_layers = 2
+        self.n_layers = n_layers
         self.global_p = global_p
-        self.enc_factor = 4
+        # self.enc_factor = 4
+        self.enc_factor = enc_factor
         self.latent_dim = latent_dim
 
         # Building architecture
@@ -237,7 +243,7 @@ class Ontix(nn.Module):
     """A class to define a ontology-based VAE"""
 
     def __init__(
-        self, input_dim, latent_dim, dec_fc_layer, mask_1, mask_2=None, global_p=0.1
+        self, input_dim, latent_dim, dec_fc_layer, mask_1, mask_2=None, global_p=0.1, enc_factor=4
     ):
         super(Ontix, self).__init__()
         # Model attributes
@@ -261,7 +267,8 @@ class Ontix(nn.Module):
                 self.latent_dim = self.ont_dim_2
 
         self.global_p = global_p
-        self.enc_factor = 4
+        # self.enc_factor = 4
+        self.enc_factor = enc_factor
 
         # Building architecture
         if self.ont_dim_2 == None:
@@ -558,6 +565,66 @@ class ImageVAE(nn.Module):
         return out.view(x.shape), mu, logvar
 
 
+class TranslateVAE(nn.Module):
+    def __init__(self, input_dim, latent_dim, hidden_dim=1024):
+        super(TranslateVAE, self).__init__()
+        self.input_dim = input_dim
+        self.latent_dim = latent_dim
+        self.hidden_dim = hidden_dim
+
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, hidden_dim),
+        )
+
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.BatchNorm1d(hidden_dim),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.BatchNorm1d(hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, input_dim),
+        )
+
+        self.mu = nn.Linear(self.hidden_dim, self.latent_dim)
+        self.logvar = nn.Linear(hidden_dim, self.latent_dim)
+
+    def encode(self, x):
+        h = self.encoder(x)
+        return self.mu(h), self.logvar(h)
+
+    def reparameterize(self, mu, logvar):
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        return mu + eps * std
+
+    def decode(self, z):
+        return self.decoder(z)
+
+    def forward(self, x):
+        mu, logvar = self.encode(x)
+        z = self.reparameterize(mu, logvar)
+        reconstructions = self.decode(z)
+        return reconstructions, mu, logvar
+
+
 class LatentSpaceClassifier(nn.Module):
     """Latent space discriminator"""
 
@@ -570,17 +637,12 @@ class LatentSpaceClassifier(nn.Module):
         self.net = nn.Sequential(
             nn.Linear(input_dim, n_hidden),
             nn.ReLU(inplace=True),
+            # nn.Linear(n_hidden, n_hidden),
+            # nn.ReLU(inplace=True),
             nn.Linear(n_hidden, n_hidden),
             nn.ReLU(inplace=True),
             nn.Linear(n_hidden, n_out),
         )
-
-        self.apply(self._init_weights)
-
-    def _init_weights(self, m):
-        if type(m) == nn.Linear:
-            torch.nn.init.xavier_uniform_(m.weight)
-            m.bias.data.fill_(0.01)
 
     def forward(self, x):
         return self.net(x)

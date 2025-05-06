@@ -43,7 +43,7 @@ def objective(
     optuna.logging.disable_default_handler()
     logger = getlogger(cfg)
     logger.debug(f"pathkey in objective: {path_key}")
-    device = get_device(verbose=False)
+    device = get_device()
     loss_type = model_type + valloader.dataset.data_modality
     model = get_model_for_tuning(
         cfg,

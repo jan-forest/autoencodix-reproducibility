@@ -7,7 +7,7 @@ import seaborn as sns
 from PIL import Image
 
 from src.utils.utils_basic import getlogger
-sns.set_style("white")
+
 sns_out_type = "png"
 
 
@@ -148,7 +148,7 @@ def translate_grid(cfg, img_root, clin_data, param, save_fig=""):
                 col_labels[i],
                 va="bottom",
                 ha="center",
-                rotation="vertical",
+                rotation='vertical',
                 transform=ax.transAxes,
             )
     # plt.tight_layout()
@@ -222,7 +222,7 @@ def plot_translate_latent(
             col=style_param,
             style=style_param,
             markers=["o", "v"],
-            alpha=0.7,
+            alpha=0.4,
             ec="black",
             height=10,
             aspect=1,
@@ -263,7 +263,7 @@ def plot_translate_latent_simple(
             col=style_param,
             style=style_param,
             markers=["o", "v"],
-            alpha=0.7,
+            alpha=0.4,
             ec="black",
             height=10,
             aspect=1,

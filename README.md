@@ -79,11 +79,11 @@ INSTRUCTION:
     - `bash run_SC-UL_exp<N>.sh
  - The scripts will attempt to upload the results to a nextcloud, this will fail for you, because you don't have our nextcloud credentials in your .env file. So the error can be ignored and does not interfere with result generation.
 
-  
 
-# Normal README AUTOENCODIX
+# Normal Readme
+# AUTOENCODIX
 
-Autoencoders are deep-learning-based networks for dimension reduction and embedding by a combination of compressing encoder and decoder structure for non-linear and multi-modal data integration with promising application to complex biological data from large-scale omics measurements. Current ongoing research and publication provide many exciting architectures and implementations of autoencoders. However, there is a lack of easy-to-use and unified implementation covering the whole pipeline of autoencoder applications.
+Autoencoders are deep-learning based networks for dimension reduction and embedding by a combination of compressing encoder and decoder structure for non-linear and multi-modal data integration with promising application to complex biological data from large-scale omics measurements. Current ongoing research and publication provide many exciting architectures and implementations of autoencoders. However, there is a lack of easy-to-use and unified implementation covering the whole pipeline of autoencoder application.
 Consequently, we present `AUTOENCODIX` with the following features:
 - Multi-modal data integration for any numerical or categorical data
 - Different autoencoder architectures:
@@ -98,6 +98,7 @@ Consequently, we present `AUTOENCODIX` with the following features:
 <img src="https://raw.githubusercontent.com/jan-forest/autoencodix/main/images/pipeline_overview.png" alt="pipeline-overview" width="1200"/>
 
 For a detailed description and benchmark of capabilities, check our preprint and publication here: [bioRxiv 10.1101/2024.12.17.628906](https://doi.org/10.1101/2024.12.17.628906 ) 
+
 Please, use this to cite our work when using our framework: 
 
 ```
@@ -112,11 +113,27 @@ Please, use this to cite our work when using our framework:
  
 
 # Table of contents
-[[_TOC_]]
   
-
-
-
+- [AUTOENCODIX](#autoencodix)
+- [Table of contents](#table-of-contents)
+  * [1 INSTALLATION](#1-installation)
+    + [1.1 Linux-based](#11-linux-based)
+    + [1.2 Windows-based](#12-windows-based)
+    + [1.3 Mac OS](#13-mac-os)
+    + [1.4 HPC Cluster](#14-hpc-cluster)
+  * [2 Getting started](#2-getting-started)
+    + [2.1 First steps and tutorials](#21-first-steps-and-tutorials)
+    + [2.2 Other pipeline examples](#22-other-pipeline-examples)
+    + [2.3 Working with own data and config files](#23-working-with-own-data-and-config-files)
+  * [3 Run and edit pipeline](#3-run-and-edit-pipeline)
+  * [4 Project Organization](#4-project-organization)
+  * [5 Output files and visualization](#5-output-files-and-visualization)
+  * [6 Running with GPU support and parallelization on HPC](#6-running-with-gpu-support-and-parallelization-on-hpc)
+  * [7 Archives old runs](#7-archives-old-runs)
+  * [8 References](#8-references)
+  * [9 FAQ](#9-faq)
+    + [Reproducibility and CUBLAS_WORKSPACE_CONFIG](#reproducibility-and-cublas-workspace-config)
+  * [10 Contributing](#10-contributing)
   
 
 ## 1 INSTALLATION
@@ -126,7 +143,8 @@ Please, use this to cite our work when using our framework:
 Follow the instructions depending on the machine you are working with. For familiarisation with the code, use your local machine on a small dataset as shown in our tutorials.
 
 Requirements:
-- Python >= 3.10
+- pip
+- Python == 3.10 (support for Python >=3.10 starting soon)
 - GPU recommended for larger datasets
   
 
@@ -143,8 +161,7 @@ Requirements:
   
   
 
-### 1.2 Windows-based (not recommended - better use WSL)
-
+### 1.2 Windows-based
 - to use the Makefile in Windows you need to install `make`
 
 - See https://linuxhint.com/run-makefile-windows/
@@ -158,16 +175,37 @@ Requirements:
 - install requirements with `make requirements`
 
 - if you encounter problems, see the troubleshooting section at the [end](#9-faq)
-
   
 ### 1.3 Mac OS
-- clone this repo
+- clone this repo:
+```bash
+git clone https://github.com/jan-forest/autoencodix.git
+```
 
-- Overwrite `Makefile` with `Makefile_macos`
+- change into the repo:
+```bash
+cd autoencodix
+```
 
-- activate env with `source venv-gallia/bin/activate`
+- Overwrite `Makefile` with `Makefile_macos`:
+```bash
+cp Makefile_macos Makefile
+```
 
-- install requirements with `make requirements`
+- Create environment with:
+```bash
+make create_environment
+```
+
+- activate environemnt with:
+```bash
+source venv-gallia/bin/activate
+```
+
+- install requirements with:
+```bash
+make requirements
+```
 
 - currently GPU support is not available for MacOS
 
@@ -206,15 +244,20 @@ First time users should check our tutorial notebooks for more details on those s
 ### 2.2 Other pipeline examples
 
 Additional to tutorial notebooks, we provide example configs of main features of `AUTOENCODIX`:
-- Multi-modal VAE training on TCGA pan-cancer data via `run_TCGAexample.sh` including hyperparameter tuning with [Optuna](https://github.com/optuna/optuna)
-- Training of an ontology-based VAE `ontix` on single-cell data via `run_scExample.sh`. 
-
+- Multi-modal VAE training on TCGA pan-cancer data `run_TCGAexample.sh` including hyperparameter tuning with [Optuna](https://github.com/optuna/optuna) via:
+```
+> ./bash-runs/run_TCGAexample.sh 
+```
+- Training of an ontology-based VAE `ontix` on single-cell data via: 
+```
+> ./bash-runs/run_SingleCellExample.sh 
+```
 All scripts will download the data, create necessary `yaml`-configs and run the pipeline for you. Results and visualizations can be found under `reports/<run_id>/`.
  
 
 ### 2.3 Working with own data and config files
 
-To work with our framework you first need to make sure that it has the following format as described in details in the [tutorial](Tutorials/Setup_InputFormat.ipynb):
+To work with our framework you first need to make sure that it has following format as described in details in the [tutorial](Tutorials/Setup_InputFormat.ipynb):
 - for each data modality either a text-file (`csv`,`tsv`,`txt`) or `.parquet`-file with samples as rows and features as columns
 - we recommend an `ANNOTATION`-file in the same format containing clinical parameter or other sample meta-data for visualization
 - As described in the tutorials provide ontologies or image-mapping files to work with [`ontix`](Tutorials/Advanced_Ontix.ipynb) or [`x-modalix`](Tutorials/Advanced_Xmodalix.ipynb)
@@ -224,7 +267,7 @@ We provide a sample config in `./_config.yaml`. Copy and rename this file:
 
 ```
 
-cp ./_config.yaml ./<RUN_ID>_config.yaml
+> cp ./_config.yaml ./<RUN_ID>_config.yaml
 
 ```
 Each entry in the `_config.yaml` has an inline comment that indicates whether you:
@@ -258,6 +301,30 @@ After you have run the pipeline including `make data` and you want to make chang
 ## 4 Project Organization
 
 ```
+|-- bash-runs
+|   |-- run_slurm.sh
+|   |-- run_SingleCellExample.sh
+|   |-- run_TCGAexample.sh
+|-- data
+|   |-- interim
+|   |-- processed
+|   |   |-- <RUN_ID>
+|   |   |   |-- <data1.txt>
+|   |   |   |-- <data2.txt>
+|   |   |   `-- sample_split.txt
+|   |-- raw
+|   |   |-- <raw_data.txt>
+|   |   |-- images
+|   |   |   |---image_mappings.txt
+|   |   |   |---image1.jpg
+|-- models
+|   |-- <RUN_ID>
+|       `-- <model.pt>
+|-- reports
+|   |-- <RUN_ID>
+|   |    |--<latent_space.txt>
+|   |    |--figures
+|   |       `--<figure1.png>
 |-- src
 |   |-- data
 |   |   |-- format_sc_h5ad.py
@@ -300,9 +367,6 @@ After you have run the pipeline including `make data` and you want to make chang
 |-- _config.yaml
 |-- clean.sh
 |-- requirements.txt
-|-- run.sh
-|-- run_SingleCellExample.sh
-|-- run_TCGAexample.sh
 |-- scExample_config.yaml
 |-- setup.py
 |-- test_environment.py
@@ -321,10 +385,10 @@ Output can be found here:
 ## 6 Running with GPU support and parallelization on HPC
 The whole pipeline will automatically run on GPUs if GPUs are available (via `torch.cuda.is_available()` and using device `cuda:0`).
 
-See our `run.sh` script for a sample slurm configuration with GPU. To run on an HPC cluster, you need to adjust the `run.sh` script with your paths. and then start the script like:
+See our `run_slurm.sh` script for a sample slurm configuration with GPU. To run on an HPC cluster, you need to adjust the `run_slurm.sh` script with your paths. and then start the script like:
 
 ```
-bash ./run.sh <you-run-id>
+> bash ./bash-runs/run_slurm.sh <you-run-id>
 ```
 This will send the sbatch script to your cluster. This way you can also easily parallelize multiple runs, by generating multiple config files.
 
@@ -338,7 +402,7 @@ We provide a clean script, `clean.sh`. The script either archives or deletes all
 - reports
 Run by:
 ```
-./clean.sh -r <ID1,ID2,ID3,...,IDn>
+> ./clean.sh -r <ID1,ID2,ID3,...,IDn>
 ```
 will archive all output and interim data under `archive` as `<run_id>.zip`-files. If you want to delete, use the option `-d`. If you want to keep only the report folder and delete or archive the other, use the option `-k`.
 
@@ -362,6 +426,7 @@ Used data sets in notebooks and examples
 - MNIST handwritten digits via KERAS https://keras.io/api/datasets/mnist/ 
 - Images and proteom data of *C. elegans* embryogenesis https://doi.org/10.1038/s41592-021-01216-1 
 
+
 ## 9 FAQ
 
 ### Reproducibility and CUBLAS_WORKSPACE_CONFIG
@@ -381,4 +446,6 @@ error: Microsoft Visual C++ 14.0 or greater is required"
 ```
 You can find solutions in this [thread](https://stackoverflow.com/questions/64261546/how-to-solve-error-microsoft-visual-c-14-0-or-greater-is-required-when-inst)
 
+## 10 Contributing
+Contributions are highly welcome, please check your [guide](https://github.com/jan-forest/autoencodix/blob/main/CONTRIBUTING.md)
 

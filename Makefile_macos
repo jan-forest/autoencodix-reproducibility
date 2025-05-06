@@ -8,12 +8,25 @@ PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = venv-gallia
-PYTHON_INTERPRETER = python
+PYTHON_INTERPRETER = python3
 RUN_ID = $1
 OLD_RUN_ID = $2
+PYV = $(shell $(PYTHON_INTERPRETER) -c "import sys;t='{v[0]}.{v[1]}'.format(v=list(sys.version_info[:2]));sys.stdout.write(t)")
+UV_EXISTS := $(shell command -v uv 2> /dev/null)
+ifeq ($(UV_EXISTS),)
+    @echo ">>> Installing uv..."
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+endif
 # convert to integer
 
+# HELPERS TO CONTROL PYTHON VERSIONS --------------------------------------------------------
+# Function to convert version numbers to a numeric representation
+version = $(shell echo "$1" | awk -F. '{ printf("%d%03d%03d%03d\n", $$1,$$2,$$3,$$4); }')
+PYV_FORMATED = $(call version,$(PYV))
+MIN_PYV = "3.10"
+MIN_PYV_FORMATED = $(call version,$(MIN_PYV))
 # -------------------------------------------------------------------------------------------
+
 ifeq (,$(shell which conda))
 HAS_CONDA=False
 else
@@ -204,6 +217,7 @@ lint:
 
 ## Set up python interpreter environment
 create_environment:
+	# curl -LsSf https://astral.sh/uv/install.sh | sh
 	uv venv $(PROJECT_NAME) --python 3.10
 	@echo ">>> New virtualenv created. Activate with:\nsource $(PROJECT_NAME)/bin/activate"
 

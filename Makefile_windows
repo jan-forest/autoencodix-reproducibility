@@ -9,7 +9,7 @@ PROJECT_DIR := $(shell powershell -Command "(Get-Item .).FullName")
 BUCKET = [OPTIONAL] your-bucket-for-syncing-data (do not include 's3://')
 PROFILE = default
 PROJECT_NAME = venv-gallia
-PYTHON_INTERPRETER = python
+PYTHON_INTERPRETER = python3
 RUN_ID = $(RUN_ID)
 OLD_RUN_ID = $(OLD_RUN_ID)
 PYV = $(shell $(PYTHON_INTERPRETER) -c "import sys;t='{v[0]}.{v[1]}'.format(v=list(sys.version_info[:2]));sys.stdout.write(t)")
@@ -32,8 +32,8 @@ endif
 
 ## Install Python Dependencies
 requirements: test_environment
-	$(PYTHON_INTERPRETER) -m pip3 install -e .
-	$(PYTHON_INTERPRETER) -m pip3 install -r requirements.txt
+	$(PYTHON_INTERPRETER) -m pip install -e .
+	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
 	powershell -Command "New-Item -ItemType File -Force src/utils/__init__.py"
 	powershell -Command "New-Item -ItemType File -Force src/data/__init__.py"
 	powershell -Command "New-Item -ItemType File -Force src/features/__init__.py"
@@ -194,7 +194,7 @@ create_environment:
 	) else ( \
 		echo Python version is good \
 	)"
-	@$(PYTHON_INTERPRETER) -m pip3 install virtualenv
+	@$(PYTHON_INTERPRETER) -m pip install virtualenv
 	@$(PYTHON_INTERPRETER) -m venv $(PROJECT_NAME)
 	@echo ">>> New virtualenv created. Activate with: $(PROJECT_NAME)\Scripts\activate"
 
