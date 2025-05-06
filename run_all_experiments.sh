@@ -58,11 +58,14 @@ mkdir -p ./reports/paper-visualizations
 log_message "Starting Experiment 1: beta influence"
 
 # copy cfg in root
-cp ./config_runs/Exp1/Exp1_SC_Annealing_config.yaml .
-cp ./config_runs/Exp1/Exp1_TCGA_Annealing_config.yaml .
+cp ./config_runs/Exp1/*_config.yaml .
+
 # run AUTOENCODIX
-make visualize RUN_ID=Exp1_SC_Annealing
-make visualize RUN_ID=Exp1_TCGA_Annealing
+for config in ./Exp1*_config.yaml; do
+    log_message "Current run: $(basename $config _config.yaml)"
+    make visualize RUN_ID=$(basename $config _config.yaml)
+    bash ./clean.sh -r $(basename $config _config.yaml) -d -k # Clean up and keep only reports folder
+done
 
 # get paper visualization
 mkdir -p ./reports/paper-visualizations/Exp1

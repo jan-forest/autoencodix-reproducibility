@@ -8,6 +8,89 @@ Path(config_save_root).mkdir(parents=False, exist_ok=True)
 #############################################
 ### cfg for beta-influence "Experiment 1" ###
 
+# cfg_prefix = "Exp1"
+# cfg = dict()
+
+# cfg_folder = config_save_root + cfg_prefix
+# Path(cfg_folder).mkdir(parents=False, exist_ok=True)
+
+# cfg['FIX_RANDOMNESS'] = 'all'
+# cfg['GLOBAL_SEED'] = 42
+# cfg["CHECKPT_PLOT"] = True
+# cfg["FIX_XY_LIM"] = [[-10,150], [-10,150]] # Special Param only for Exp1, not in Repo
+# cfg["ANNEAL"] = "5phase-constant"
+# cfg["LATENT_DIM_FIXED"] = 2
+# cfg["BATCH_SIZE"] = 256
+# cfg['LR_FIXED'] = 0.0001
+# cfg['EPOCHS'] = 2000
+# cfg['RECONSTR_LOSS'] = "MSE"
+# cfg['VAE_LOSS'] = "KL"
+# cfg['PREDICT_SPLIT'] = "all"
+# cfg['TRAIN_TYPE'] = "train"
+# cfg['MODEL_TYPE'] = "varix"
+# cfg['BETA'] = 10
+# cfg['SPLIT'] = [0.6, 0.2, 0.2]
+
+# ### sc-Cortex
+# cfg['K_FILTER'] = 1500
+# cfg['DATA_TYPE'] = dict()
+# cfg['DATA_TYPE']['ANNO'] = dict()
+# cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
+# cfg['CLINIC_PARAM'] = [
+# 				"author_cell_type" 
+# 			]
+
+# cfg['DIM_RED_METH'] = "UMAP"
+
+# dm = ["RNA", "METH"]
+# for m in dm:								
+# 	cfg['DATA_TYPE'][m] = dict()
+# 	cfg['DATA_TYPE'][m]['SCALING'] = "Standard"
+# 	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
+# 	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
+# 	cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "scATAC_human_cortex_clinical_formatted.parquet"
+# 	if m == "RNA":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "scRNA_human_cortex_formatted.parquet"
+# 	if m == "METH":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "scATAC_human_cortex_formatted.parquet"
+
+
+# run_id = cfg_prefix + "_SC_Annealing"
+# with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+# 	yaml.dump(cfg, file)
+# ### TCGA
+# cfg['K_FILTER'] = 2000
+# cfg['DATA_TYPE'] = dict()
+# cfg['DATA_TYPE']['ANNO'] = dict()
+# cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
+# cfg['CLINIC_PARAM'] = [
+# 				"CANCER_TYPE_ACRONYM" 
+# 			]
+
+# cfg['DIM_RED_METH'] = "UMAP"
+
+# dm = ["RNA", "METH", "MUT"]
+# for m in dm:								
+# 	cfg['DATA_TYPE'][m] = dict()
+# 	cfg['DATA_TYPE'][m]['SCALING'] = "Standard"
+# 	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
+# 	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
+# 	cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
+# 	if m == "RNA":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet"
+# 	if m == "METH":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet"
+# 	if m == "MUT":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_combi_MUT_CNA_formatted.parquet"
+
+
+# run_id = cfg_prefix + "_TCGA_Annealing"
+# with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+# 	yaml.dump(cfg, file)
+# print("Config created for Experiment 1")
+#####################################################
+### New Experiment 1 ###############################
+
 cfg_prefix = "Exp1"
 cfg = dict()
 
@@ -18,18 +101,21 @@ cfg['FIX_RANDOMNESS'] = 'all'
 cfg['GLOBAL_SEED'] = 42
 cfg["CHECKPT_PLOT"] = True
 cfg["FIX_XY_LIM"] = [[-10,150], [-10,150]] # Special Param only for Exp1, not in Repo
-cfg["ANNEAL"] = "5phase-constant"
+# cfg["ANNEAL"] = "5phase-constant" -> standard annealing via internal config
 cfg["LATENT_DIM_FIXED"] = 2
 cfg["BATCH_SIZE"] = 256
 cfg['LR_FIXED'] = 0.0001
-cfg['EPOCHS'] = 2000
+# cfg['EPOCHS'] = 1000 # -> similar to other Experiments
+cfg['EPOCHS'] = 100 # -> similar to other Experiments
 cfg['RECONSTR_LOSS'] = "MSE"
 cfg['VAE_LOSS'] = "KL"
 cfg['PREDICT_SPLIT'] = "all"
 cfg['TRAIN_TYPE'] = "train"
 cfg['MODEL_TYPE'] = "varix"
-cfg['BETA'] = 10
 cfg['SPLIT'] = [0.6, 0.2, 0.2]
+# cfg['BETA'] = 10  # -> make it variable with 5 runs with different beta: 0, 0.01, 0.1, 1, 10
+beta_values = [0, 0.01, 0.1, 1, 10]
+cfg['DIM_RED_METH'] = "UMAP"
 
 ### sc-Cortex
 cfg['K_FILTER'] = 1500
@@ -39,8 +125,6 @@ cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
 cfg['CLINIC_PARAM'] = [
 				"author_cell_type" 
 			]
-
-cfg['DIM_RED_METH'] = "UMAP"
 
 dm = ["RNA", "METH"]
 for m in dm:								
@@ -54,10 +138,17 @@ for m in dm:
 	if m == "METH":
 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "scATAC_human_cortex_formatted.parquet"
 
+for b in beta_values:
+	cfg['BETA'] = b
+	# Format float b in exponential notation
+	if b == 0:
+		b = "0"
+	else:
+		b = "{:.0e}".format(b).replace("+","")
+	run_id = cfg_prefix + "_SC_Annealing" + "_beta" + str(b)
+	with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+		yaml.dump(cfg, file)
 
-run_id = cfg_prefix + "_SC_Annealing"
-with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
-	yaml.dump(cfg, file)
 ### TCGA
 cfg['K_FILTER'] = 2000
 cfg['DATA_TYPE'] = dict()
@@ -84,10 +175,19 @@ for m in dm:
 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_combi_MUT_CNA_formatted.parquet"
 
 
-run_id = cfg_prefix + "_TCGA_Annealing"
-with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
-	yaml.dump(cfg, file)
+for b in beta_values:
+	cfg['BETA'] = b
+	# Format float b in exponential notation
+	if b == 0:
+		b = "0"
+	else:
+		b = "{:.0e}".format(b).replace("+","")
+	run_id = cfg_prefix + "_TCGA_Annealing" + "_beta" + str(b)
+	with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+		yaml.dump(cfg, file)
 print("Config created for Experiment 1")
+
+
 
 #####################################################
 ### cfg for architecture benchmark "Experiment 2" ###
