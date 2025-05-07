@@ -65,7 +65,7 @@ with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
 	yaml.dump(cfg, file)
 print("Config created for Experiment 6")
 
-### cfg for x-modalix examples "Experiment 6" extra ImgImg ###
+### cfg for x-modalix examples "Experiment 6" extra METH_METH ###
 
 cfg_prefix = "Exp6"
 cfg = dict()
@@ -102,7 +102,7 @@ cfg['DATA_TYPE'] = dict()
 cfg['DATA_TYPE']['ANNO'] = dict()
 cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
 cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
-dm = ["IMG"]
+dm = ["METH"]
 for m in dm:								
 	cfg['DATA_TYPE'][m] = dict()
 	cfg['DATA_TYPE'][m] = dict()
