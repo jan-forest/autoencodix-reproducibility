@@ -2,7 +2,7 @@
 if command -v curl &> /dev/null; then
     echo "curl is installed"
     curl -LsSf https://astral.sh/uv/0.5.9/install.sh | sh
-    
+
 elif command -v wget &> /dev/null; then
     echo "wget is installed"
     wget -qO- https://astral.sh/uv/0.5.9/install.sh | sh

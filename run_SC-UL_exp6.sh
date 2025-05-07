@@ -16,9 +16,9 @@ echo "Doing Experiment 6: TCGA_METH_RNA X-Modalix"
 ml cuDNN
 export __MODIN_AUTOIMPORT_PANDAS_=:1
 
-./run_exp5.sh
+./run_exp6.sh
 if [ -z "$VIRTUAL_ENV" ];
-then 
+then
 	source venv-gallia/bin/activate
 	echo $VIRTUAL_ENV
 fi
