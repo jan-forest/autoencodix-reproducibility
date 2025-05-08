@@ -52,14 +52,14 @@ bash ./get_preprocessed_data.sh
 log_message "Creating configs"
 $PYTHON_INTERPRETER create_cfg_exp6.py
 
-#### Exp5 TCGA and MNIST ####
+#### Exp6 TCGA and MNIST ####
 log_message "Starting Experiment 6: RNA and METH"
 mkdir -p ./reports/paper-visualizations/Exp6
 cp ./config_runs/Exp6/*.yaml .
-make visualize RUN_ID=Exp6_RNA_METH
+make visualize RUN_ID=Exp6_TCGA_RNA_METH
 log_message "Experiment 6 main run done"
 
-log_message "Starting RNA_to_RNA run for comparison"
-make visualize RUN_ID=Exp6_TCGA_METH_METH"
+log_message "Starting METH_METH run for comparison"
+make visualize RUN_ID=Exp6_TCGA_METH_METH
 log_message "Experiment 6 METH_to_METH run done"
 # TODO new downstream scripts
