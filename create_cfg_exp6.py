@@ -37,9 +37,9 @@ cfg['SPLIT'] = [0.7, 0.2, 0.1]
 # X-modalix specific
 cfg["DELTA_PAIR"] = 0
 cfg["DELTA_CLASS"] = 10
-cfg["ANNEAL_PRETRAINING"] = True
+cfg["ANNEAL_PRETRAINING"] = False
 cfg["TRANSLATE"] = "RNA_to_METH"
-
+cfg["PRETRAIN_TARGET_MODALITY"] = ""
 
 cfg['K_FILTER'] = 4000
 cfg['DATA_TYPE'] = dict()
@@ -91,8 +91,10 @@ cfg['DROP_P'] = 0.5
 
 # X-modalix specific
 cfg["DELTA_PAIR"] = 0
+
+cfg["PRETRAIN_TARGET_MODALITY"] = ""
 cfg["DELTA_CLASS"] = 10
-cfg["ANNEAL_PRETRAINING"] = True
+cfg["ANNEAL_PRETRAINING"] = False
 cfg["PRETRAIN_EPOCHS"] = 0
 cfg["TRANSLATE"] = "METH_to_METH"
 
