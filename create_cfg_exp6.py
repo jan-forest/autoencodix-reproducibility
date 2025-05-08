@@ -47,20 +47,20 @@ cfg['DATA_TYPE']['ANNO'] = dict()
 cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
 cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
 dm = ["RNA", "METH"]
-for m in dm:								
+for m in dm:
 	cfg['DATA_TYPE'][m] = dict()
 	cfg['DATA_TYPE'][m]['SCALING'] = "MinMax"
 	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
 	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
 
-	cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet" 
+	cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet"
 	if m == "RNA":
-		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet" 
+		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet"
 cfg['CLINIC_PARAM'] = ["CANCER_TYPE"]
 cfg["CLASS_PARAM"] = "CANCER_TYPE"
 cfg['DIM_RED_METH'] = "UMAP"
 
-run_id = cfg_prefix + "_TCGA_METH_RNA"
+run_id = cfg_prefix + "_TCGA_RNA_METH"
 with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
 	yaml.dump(cfg, file)
 print("Config created for Experiment 6")
@@ -103,14 +103,14 @@ cfg['DATA_TYPE']['ANNO'] = dict()
 cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
 cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
 dm = ["METH"]
-for m in dm:								
+for m in dm:
 	cfg['DATA_TYPE'][m] = dict()
 	cfg['DATA_TYPE'][m] = dict()
 	cfg['DATA_TYPE'][m]['SCALING'] = "MinMax"
 	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
 	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
 
-	cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet" 
+	cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet"
 cfg['CLINIC_PARAM'] = [ "CANCER_TYPE"]
 cfg["CLASS_PARAM"] = "CANCER_TYPE"
 cfg['DIM_RED_METH'] = "UMAP"
