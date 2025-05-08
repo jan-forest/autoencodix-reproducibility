@@ -12,7 +12,7 @@ sbatch <<EOT
 #SBATCH --mem=64GB
 #SBATCH --gres=gpu:rtx2080ti:1
 
-echo "Doing Experiment 6: TCGA_METH_RNA X-Modalix"
+echo "Doing Experiment 6: TCGA_RNA_METH X-Modalix"
 ml cuDNN
 export __MODIN_AUTOIMPORT_PANDAS_=:1
 
@@ -25,7 +25,7 @@ fi
 nephelai upload-with-fs reports/Exp6_TCGA_METH_RNA
 nephelai upload-with-fs reports/Exp6_TCGA_METH_RNA
 nephelai upload-with-fs reports/paper-visualizations/Exp6
-# bash ./clean.sh -r Exp6_TCGA_METH_RNA,Exp6_TCGA_METH_METH -k -d # Clean up and keep only reports folder
+# bash ./clean.sh -r Exp6_TCGA_RNA_METH,Exp6_TCGA_METH_METH -k -d # Clean up and keep only reports folder
 
 exit 0
 EOT
