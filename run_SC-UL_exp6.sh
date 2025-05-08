@@ -1,8 +1,8 @@
 sbatch <<EOT
 #!/bin/bash
-#SBATCH --job-name=autoencoder_Exp6_TCGA_METH_RNA
-#SBATCH --output=./reports/Exp6_TCGA_METH_RNA/slurm_%a_%j.out
-#SBATCH --error=./reports/Exp6_TCGA_METH_RNA/slurm_%a_%j.err
+#SBATCH --job-name=autoencoder_Exp6_TCGA_RNA_METH
+#SBATCH --output=./reports/Exp6_TCGA_RNA_METH/slurm_%a_%j.out
+#SBATCH --error=./reports/Exp6_TCGA_RNA_METH/slurm_%a_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --partition=clara
@@ -22,8 +22,8 @@ then
 	source venv-gallia/bin/activate
 	echo $VIRTUAL_ENV
 fi
-nephelai upload-with-fs reports/Exp6_TCGA_METH_RNA
-nephelai upload-with-fs reports/Exp6_TCGA_METH_RNA
+nephelai upload-with-fs reports/Exp6_TCGA_RNA_METH
+nephelai upload-with-fs reports/Exp6_TCGA_METH_METH
 nephelai upload-with-fs reports/paper-visualizations/Exp6
 # bash ./clean.sh -r Exp6_TCGA_RNA_METH,Exp6_TCGA_METH_METH -k -d # Clean up and keep only reports folder
 
