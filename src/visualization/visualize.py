@@ -887,7 +887,8 @@ def main(run_id):
             if to_data_type == "IMG":
                 plot2 = translate_grid(
                     cfg=cfg,
-                    img_root=os.path.join("reports", run_id, "IMGS", ""),
+                    translate_root=os.path.join("reports", run_id, "Translate_FROM_TO_IMG", ""),
+                    reference_root=os.path.join("reports", run_id, "Reference_TO_TO_IMG", ""),
                     clin_data=clin_data,
                     param=param,
                     save_fig=os.path.join(
