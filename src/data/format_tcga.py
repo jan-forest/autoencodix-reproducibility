@@ -146,8 +146,7 @@ def format_clin(file_patient, file_sample, cfg):
     logger.info('Fill in missing entries as "unknown" in str columns')
     for col in df:
         dt = df[col].dtype
-
-        if dt == object or dt == str:
+        if dt.name == 'object' or dt.name == 'string':
             logger.info("Column:" + col)
             df[col].fillna("unknown", inplace=True)
 
