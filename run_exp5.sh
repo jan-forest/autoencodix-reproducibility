@@ -29,7 +29,7 @@ else
     log_message "Virtual environment '$VENV_DIR' does not exist. Creating..."
     make create_environment
     log_message "Activating environment"
-    source venv-gallia/bin/activate ## TODO rename env name?
+    source venv-gallia/bin/activate 
     log_message "Installing all requirements"
     make requirements
 fi
@@ -90,13 +90,14 @@ log_message "Exp5 removed intermediate data"
 # Get paper visualization
 log_message "Copying visualizations to reports/paper-visualizations/Exp5"
 mkdir -p ./reports/paper-visualizations/Exp5/temp
-mv ./reports/paper-visualizations/Exp5/* ./reports/paper-visualizations/Exp5/temp
+cp ./reports/paper-visualizations/Exp5/* ./reports/paper-visualizations/Exp5/temp
 # move the below files from temp to the main folder
-mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C_MSE_Boxplot_Exp_5.png
-mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D_MSE_Barplot_Exp_5.png
-mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S5_F1_Classifier.csv
-mv ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C_rel_loss_Exp_5.png
-mv ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D_Digit_Grid.png
+cp ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C_MSE_Boxplot.png
+cp ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D_MSE_Barplot.png
+cp ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S5_F1_Classifier.csv
+cp ./reports/Exp5_TCGA_MNIST/figures/latent2D_Aligned_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4B_2DLatent.png
+cp ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4C_rel_loss.png
+cp ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4D_Digit_Grid.png
 rm -r ./reports/paper-visualizations/Exp5/temp
 
 

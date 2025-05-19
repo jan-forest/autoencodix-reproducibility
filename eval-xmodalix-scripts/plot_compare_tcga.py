@@ -230,9 +230,9 @@ if __name__ == "__main__":
         if cfg["DATA_TYPE"][d]["TYPE"] == "IMG":
             sample_file = cfg["DATA_TYPE"][d]["FILE_RAW"]
 
-    reconstruction_imgs = os.path.join("reports", RUN_ID, "IMGS")
-    reconstruction_imgs_img = os.path.join("reports", RUN_ID, "IMGS_IMG")
-    reconstruction_img_pure = os.path.join("reports", f"{RUN_ID}ImgImg", "IMGS")
+    reconstruction_imgs = os.path.join("reports", RUN_ID, "Translate_FROM_TO_IMG")
+    reconstruction_imgs_img = os.path.join("reports", RUN_ID, "Reference_TO_TO_IMG")
+    reconstruction_img_pure = os.path.join("reports", f"{RUN_ID}ImgImg", "Translate_FROM_TO_IMG")
     processed_imgs = os.path.join("data/processed", RUN_ID)
     split_file = os.path.join("data/processed", RUN_ID, "sample_split.parquet")
     mapping_file = os.path.join("data/raw", sample_file)

@@ -20,8 +20,13 @@ sns.set_style("whitegrid")
 config_prefix_list = ["Exp2_TCGA_tune", "Exp2_SC_tune"]
 
 rootdir = "./"
+# rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
+
 rootsave = "./reports/paper-visualizations/Exp2/"
 output_type = ".png"
+
+plot_rec_type = "R2_valid"
+plot_rec_type_tune = "R2_valid_diff"
 
 ## Read-in
 
@@ -179,13 +184,15 @@ arch_order = [
 box_rec_dense = sns.catplot(
     data=df_results,
     x="Architecture",
-    y="Rec. loss",
+    # y="Rec. loss",
+    y=plot_rec_type,
     hue="Latent_Dim",
+    col="Latent_Dim",
     palette="pastel",
     order=arch_order,
     kind="box",
-    sharey=False,
-    aspect=2,
+    sharey=True,
+    aspect=0.8,
 )
 box_rec_dense.tick_params(axis="x", rotation=90)
 box_rec_dense.tight_layout()
@@ -197,7 +204,8 @@ row_order = ["RNA", "METH", "MUT", "METH+RNA", "MUT+RNA", "METH+MUT", "METH+MUT+
 box_rec_detail = sns.catplot(
     data=df_results,
     x="Architecture",
-    y="Rec. loss",
+    # y="Rec. loss",
+    y=plot_rec_type,
     hue="Latent_Dim",
     col="Data_set",
     row="Data_Modalities",
@@ -385,15 +393,36 @@ box_ml_linear = sns.catplot(
     ],
     x="Architecture",
     y="Perf. over random",
+    col="Latent_Dim",
     hue="Latent_Dim",
     # row="Data_set",
     palette="pastel",
     order=arch_plus_order,
     kind="box",
-    aspect=2,
+    aspect=0.8,
 )
+# ## Get mean Perf. over random for architecture PCA for each latent dimension
+# latent_dims = [2, 8, 29]
+# pca_perf = {
+#     latent_dim: ml_results_normed.loc[
+#         (ml_results_normed["ML_Algorithm"] == sel_ml_alg)
+#         & (ml_results_normed["Split"] == "test")
+#         & (ml_results_normed["Architecture"] == "PCA")
+#         & (ml_results_normed["Latent_Dim"] == latent_dim),
+#         "Perf. over random",
+#     ].median()
+#     for latent_dim in latent_dims
+# }
+
+
 box_ml_linear.tick_params(axis="x", rotation=90)
-box_ml_linear.set(yscale="symlog")
+# box_ml_linear.set(yscale="symlog")
+# Set y-axis limit
+box_ml_linear.set(ylim=(-10, 12))
+# box_ml_linear.refline(y=pca_perf[2], color="blue")
+# box_ml_linear.refline(y=pca_perf[8], color="orange")
+# box_ml_linear.refline(y=pca_perf[29], color="green")
+box_ml_linear.tight_layout()
 box_ml_linear.savefig(rootsave + "Exp2_Fig2D_ml-linear_dense" + output_type)
 
 box_ml_detail = sns.catplot(
@@ -408,7 +437,8 @@ box_ml_detail = sns.catplot(
     kind="box",
     aspect=2,
 )
-box_ml_detail.set(yscale="symlog")
+# box_ml_detail.set(yscale="symlog")
+box_ml_detail.set(ylim=(-15, 30))
 box_ml_detail.tick_params(axis="x", rotation=90)
 box_ml_detail.savefig(rootsave + "Exp2_SuppFig_ml-all_detail" + output_type)
 
@@ -697,21 +727,25 @@ print("Make Plots for tuning impact")
 box_tune_recon_dense = sns.catplot(
     data=df_results,
     x="Architecture",
-    y="Rec. loss improvement",
+    # y="Rec. loss improvement",
+    y=plot_rec_type_tune,
     hue="Latent_Dim",
+    col="Latent_Dim",
     palette="pastel",
     order=arch_order,
     kind="box",
-    sharey=False,
-    aspect=2,
+    sharey=True,
+    aspect=0.8,
 )
 box_tune_recon_dense.tick_params(axis="x", rotation=90)
+box_tune_recon_dense.tight_layout()
 box_tune_recon_dense.savefig(rootsave + "Exp2_Fig2E_tune-recon_dense" + output_type)
 
 box_tune_recon_detail = sns.catplot(
     data=df_results,
     x="Architecture",
-    y="Rec. loss improvement",
+    # y="Rec. loss improvement",
+    y=plot_rec_type_tune,
     hue="Latent_Dim",
     col="Data_set",
     row="Data_Modalities",
@@ -734,14 +768,18 @@ box_tune_ml_dense = sns.catplot(
     x="Architecture",
     y="Perf. improvement",
     hue="Latent_Dim",
+    col="Latent_Dim",
     palette="pastel",
     order=arch_order,
     kind="box",
-    sharey=False,
-    aspect=2,
+    sharey=True,
+    aspect=0.8,
 )
 box_tune_ml_dense.tick_params(axis="x", rotation=90)
-box_tune_ml_dense.set(yscale="symlog")
+# box_tune_ml_dense.set(yscale="symlog")
+# Set y-axis limit
+box_tune_ml_dense.set(ylim=(-10, 12))
+box_tune_ml_dense.tight_layout()
 box_tune_ml_dense.savefig(rootsave + "Exp2_Fig2F_tune-ml-linear_dense" + output_type)
 
 box_tune_ml_detail = sns.catplot(

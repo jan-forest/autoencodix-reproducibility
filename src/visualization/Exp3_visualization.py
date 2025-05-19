@@ -9,6 +9,8 @@ import seaborn.objects as so
 from matplotlib import pyplot as plt
 
 rootdir = "./"
+# rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
+
 
 rootsave = "./reports/paper-visualizations/Exp3/"
 
@@ -140,6 +142,8 @@ params["L"] = "learn_rate"
 # root = "./"
 
 output_type = ".png"
+# output_type = ".svg"
+
 
 config_prefix = "Exp3_"
 for dataset in datasets:
@@ -485,180 +489,180 @@ for dataset in datasets:
 
 #### Latent Space Examples ####
 print("Make Latent space examples")
-
-run_examples = [
-    "Exp3_TCGA_Chr_rand5_B5",
-    "Exp3_TCGA_Rea_rand5_B5",
-    "Exp3_SC_Chr_rand5_B5",
-    "Exp3_SC_Rea_rand5_B5",
+run_examples_base = [
+    "Exp3_TCGA_Chr",
+    "Exp3_TCGA_Rea",
+    "Exp3_SC_Chr",
+    "Exp3_SC_Rea",
 ]
 
 run_param = {
-    "Exp3_TCGA_Chr_rand5_B5": "SEX",
-    "Exp3_TCGA_Rea_rand5_B5": "TUMOR_TISSUE_SITE",
-    "Exp3_SC_Chr_rand5_B5": "author_cell_type",
-    "Exp3_SC_Rea_rand5_B5": "age_group",
+    "Exp3_TCGA_Chr": "SEX",
+    "Exp3_TCGA_Rea": "TUMOR_TISSUE_SITE",
+    "Exp3_SC_Chr": "author_cell_type",
+    "Exp3_SC_Rea": "age_group",
 }
 
 name_toplvl = read_ont_file("./data/raw/Reactome_TopLvl_hsa.txt", sep="\t")
 name_toplvl = {v[0].rstrip(): k for k, v in name_toplvl.items()}
 
-for run_id in run_examples:
-    if "Rea" in run_id:
-        latent_names = read_ont_file("./data/raw/full_ont_lvl2_reactome.txt", sep="\t")
-        latent_names = latent_names.keys()
+for base_run_id in run_examples_base:
+    for rand in range(1, 6):  # Iterate over rand1 to rand5
+        run_id = f"{base_run_id}_rand{rand}_B5"
+        # run_id = f"{base_run_id}_rand{rand}_L2"
 
-        new_names = []
-        for l_name in latent_names:
-            new_names.append(name_toplvl[l_name])
-        latent_names = new_names
-
-    if "Chr" in run_id:
-        latent_names = read_ont_file("./data/raw/chromosome_ont_lvl2.txt", sep="\t")
-
-    if "TCGA" in run_id:
         if "Rea" in run_id:
-            lat_order = list(
-                pd.read_csv("./data/raw/top_lvl_order_TCGA_Rea.txt", sep="\t").iloc[
-                    :, 0
-                ]
-            )
+            latent_names = read_ont_file("./data/raw/full_ont_lvl2_reactome.txt", sep="\t")
+            latent_names = latent_names.keys()
+
+            new_names = []
+            for l_name in latent_names:
+                new_names.append(name_toplvl[l_name])
+            latent_names = new_names
+
         if "Chr" in run_id:
-            lat_order = list(
-                pd.read_csv("./data/raw/top_lvl_order_TCGA_Chr.txt", sep="\t").iloc[
-                    :, 0
-                ]
-            )
-    if "SC" in run_id:
-        if "Rea" in run_id:
-            lat_order = list(
-                pd.read_csv("./data/raw/top_lvl_order_SC_Rea.txt", sep="\t").iloc[:, 0]
-            )
-        if "Chr" in run_id:
-            lat_order = list(
-                pd.read_csv("./data/raw/top_lvl_order_SC_Chr.txt", sep="\t").iloc[:, 0]
-            )
+            latent_names = read_ont_file("./data/raw/chromosome_ont_lvl2.txt", sep="\t")
 
-    lat_file = rootdir + "reports/" + run_id + "/predicted_latent_space.parquet"
+        if "TCGA" in run_id:
+            if "Rea" in run_id:
+                lat_order = list(
+                    pd.read_csv("./data/raw/top_lvl_order_TCGA_Rea.txt", sep="\t").iloc[
+                        :, 0
+                    ]
+                )
+            if "Chr" in run_id:
+                lat_order = list(
+                    pd.read_csv("./data/raw/top_lvl_order_TCGA_Chr.txt", sep="\t").iloc[
+                        :, 0
+                    ]
+                )
+        if "SC" in run_id:
+            if "Rea" in run_id:
+                lat_order = list(
+                    pd.read_csv("./data/raw/top_lvl_order_SC_Rea.txt", sep="\t").iloc[:, 0]
+                )
+            if "Chr" in run_id:
+                lat_order = list(
+                    pd.read_csv("./data/raw/top_lvl_order_SC_Chr.txt", sep="\t").iloc[:, 0]
+                )
 
-    if "TCGA" in run_id:
-        clin_file = "./data/raw/" + "data_clinical_formatted.parquet"
-    if "SC" in run_id:
-        clin_file = "./data/raw/" + "scATAC_human_cortex_clinical_formatted.parquet"
+        lat_file = rootdir + "reports/" + run_id + "/predicted_latent_space.parquet"
 
-    lat_space = pd.read_parquet(lat_file)
+        if "TCGA" in run_id:
+            clin_file = "./data/raw/" + "data_clinical_formatted.parquet"
+        if "SC" in run_id:
+            clin_file = "./data/raw/" + "scATAC_human_cortex_clinical_formatted.parquet"
 
-    lat_space.columns = latent_names
-    clin_data = pd.read_parquet(clin_file)
+        lat_space = pd.read_parquet(lat_file)
 
-    rel_index = clin_data.index.intersection(lat_space.index)
+        lat_space.columns = latent_names
+        clin_data = pd.read_parquet(clin_file)
 
-    lat_space = lat_space.loc[rel_index, lat_order]
-    clin_data = clin_data.loc[rel_index, :]
+        rel_index = clin_data.index.intersection(lat_space.index)
 
-    with open(rootdir + "reports/" + run_id + "/" + run_id + "_config.yaml") as f:
-        cfg = yaml.safe_load(f)
-    clin_params = cfg["CLINIC_PARAM"]
+        lat_space = lat_space.loc[rel_index, lat_order]
+        clin_data = clin_data.loc[rel_index, :]
 
-    if "TCGA" in run_id:
-        clin_params.append("TUMOR_TISSUE_SITE")
-    if "SC" in run_id:
-        clin_params.append("tissue")
+        with open(rootdir + "reports/" + run_id + "/" + run_id + "_config.yaml") as f:
+            cfg = yaml.safe_load(f)
+        clin_params = cfg["CLINIC_PARAM"]
 
-    df = pd.melt(lat_space, var_name="latent dim", value_name="latent intensity")
-    df["sample"] = len(lat_space.columns) * list(lat_space.index)
-    df = df.join(clin_data[clin_params], on="sample")
+        if "TCGA" in run_id:
+            clin_params.append("TUMOR_TISSUE_SITE")
+        if "SC" in run_id:
+            clin_params.append("tissue")
 
-    for col in clin_params:
-        labels = df[col]
-        if not (type(labels[0]) is str):
-            if len(np.unique(labels)) > 3:
-                labels = pd.qcut(labels, q=4).astype(str)
-            else:
-                labels = [str(x) for x in labels]
-        df[col] = labels
+        df = pd.melt(lat_space, var_name="latent dim", value_name="latent intensity")
+        df["sample"] = len(lat_space.columns) * list(lat_space.index)
+        df = df.join(clin_data[clin_params], on="sample")
 
-    if "TCGA" in run_id:
-        sel_type = list(df.TUMOR_TISSUE_SITE.value_counts()[0:5].index)
-        other_cancer = ~df.TUMOR_TISSUE_SITE.isin(sel_type)
+        for col in clin_params:
+            labels = df[col]
+            if not (type(labels[0]) is str):
+                if len(np.unique(labels)) > 3:
+                    labels = pd.qcut(labels, q=4).astype(str)
+                else:
+                    labels = [str(x) for x in labels]
+            df[col] = labels
 
-        df.loc[other_cancer, "TUMOR_TISSUE_SITE"] = "others"
-    else:
-        sel_type = [True] * df.shape[0]
+        if "TCGA" in run_id:
+            sel_type = list(df.TUMOR_TISSUE_SITE.value_counts()[0:5].index)
+            other_cancer = ~df.TUMOR_TISSUE_SITE.isin(sel_type)
 
-    print("Make plot " + run_id)
+            df.loc[other_cancer, "TUMOR_TISSUE_SITE"] = "others"
+        else:
+            sel_type = [True] * df.shape[0]
 
-    sns.set_theme(style="white", rc={"axes.facecolor": (0, 0, 0, 0)})
-    param = run_param[run_id]
-    exclude_missing_info = (df[param] == "unknown") | (df[param] == "nan")
+        print("Make plot " + run_id)
 
-    xmin = (
-        df.loc[~exclude_missing_info, ["latent intensity", "latent dim", param]]
-        .groupby([param, "latent dim"], observed=False)
-        .quantile(0.05)
-        .min()
-    )
-    xmax = (
-        df.loc[~exclude_missing_info, ["latent intensity", "latent dim", param]]
-        .groupby([param, "latent dim"], observed=False)
-        .quantile(0.9)
-        .max()
-    )
+        sns.set_theme(style="white", rc={"axes.facecolor": (0, 0, 0, 0)})
+        param = run_param[base_run_id]
+        exclude_missing_info = (df[param] == "unknown") | (df[param] == "nan")
 
-    if len(np.unique(df[param])) > 8:
-        cat_pal = sns.husl_palette(len(np.unique(df[param])))
-    else:
-        cat_pal = sns.color_palette(n_colors=len(np.unique(df[param])))
-
-    g = sns.FacetGrid(
-        df.loc[~exclude_missing_info, :],
-        row="latent dim",
-        hue=param,
-        aspect=18,
-        height=0.33,
-        xlim=(xmin[0], xmax[0]),
-        palette=cat_pal,
-        legend_out=True,
-    )
-    # g = sns.FacetGrid(df[~exclude_missing_info], row="latent dim",hue=param, aspect=18, height=0.33, palette=cat_pal, legend_out=True, sharex=False)
-
-    g.map_dataframe(
-        sns.kdeplot,
-        "latent intensity",
-        bw_adjust=0.5,
-        clip_on=True,
-        fill=True,
-        alpha=0.8,
-        warn_singular=False,
-        ec="k",
-        lw=1,
-    )
-
-    def label(data, color, label, text="latent dim"):
-        ax = plt.gca()
-        label_text = data[text].unique()[0]
-        ax.text(
-            0.0,
-            0.2,
-            label_text,
-            fontweight="bold",
-            ha="right",
-            va="center",
-            transform=ax.transAxes,
+        xmin = (
+            df.loc[~exclude_missing_info, ["latent intensity", "latent dim", param]]
+            .groupby([param, "latent dim"], observed=False)
+            .quantile(0.05)
+            .min()
+        )
+        xmax = (
+            df.loc[~exclude_missing_info, ["latent intensity", "latent dim", param]]
+            .groupby([param, "latent dim"], observed=False)
+            .quantile(0.9)
+            .max()
         )
 
-    g.map_dataframe(label, text="latent dim")
+        if len(np.unique(df[param])) > 8:
+            cat_pal = sns.husl_palette(len(np.unique(df[param])))
+        else:
+            cat_pal = sns.color_palette(n_colors=len(np.unique(df[param])))
 
-    g.figure.subplots_adjust(hspace=-0.25)
-    # g.figure.subplots_adjust(hspace=.25)
+        g = sns.FacetGrid(
+            df.loc[~exclude_missing_info, :],
+            row="latent dim",
+            hue=param,
+            aspect=18,
+            height=0.33,
+            xlim=(xmin[0], xmax[0]),
+            palette=cat_pal,
+            legend_out=True,
+        )
 
-    # Remove axes details that don't play well with overlap
-    g.set_titles("")
-    g.set(yticks=[], ylabel="")
-    g.despine(bottom=True, left=True)
+        g.map_dataframe(
+            sns.kdeplot,
+            "latent intensity",
+            bw_adjust=0.5,
+            clip_on=True,
+            fill=True,
+            alpha=0.8,
+            warn_singular=False,
+            ec="k",
+            lw=1,
+        )
 
-    g.add_legend()
+        def label(data, color, label, text="latent dim"):
+            ax = plt.gca()
+            label_text = data[text].unique()[0]
+            ax.text(
+                0.0,
+                0.2,
+                label_text,
+                fontweight="bold",
+                ha="right",
+                va="center",
+                transform=ax.transAxes,
+            )
 
-    g.savefig(
-        "./reports/paper-visualizations/Exp3/" + run_id + "_" + param + output_type
-    )
+        g.map_dataframe(label, text="latent dim")
+
+        g.figure.subplots_adjust(hspace=-0.25)
+
+        g.set_titles("")
+        g.set(yticks=[], ylabel="")
+        g.despine(bottom=True, left=True)
+
+        g.add_legend()
+
+        g.savefig(
+            "./reports/paper-visualizations/Exp3/" + run_id + "_" + param + output_type
+        )

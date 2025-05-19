@@ -136,21 +136,21 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
 
     test_dataset_reconstructed = MyDataset(
         test_df,
-        os.path.join("reports", run_id, "IMGS"),
+        os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         transform=transform,
         col="rec_paths",
     )
 
     train_dataset_reconstructed = MyDataset(
         train_df,
-        os.path.join("reports", run_id, "IMGS"),
+        os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         transform=transform,
         col="rec_paths",
     )
 
     valid_dataset_reconstructed = MyDataset(
         valid_df,
-        os.path.join("reports", run_id, "IMGS"),
+        os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         transform=transform,
         col="rec_paths",
     )

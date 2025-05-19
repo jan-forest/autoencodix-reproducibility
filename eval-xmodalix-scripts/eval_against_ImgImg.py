@@ -57,7 +57,7 @@ def get_objects(RUN_ID):
         if cfg["DATA_TYPE"][d]["TYPE"] == "IMG":
             sample_file = cfg["DATA_TYPE"][d]["FILE_RAW"]
 
-    reconstruction_imgs = os.path.join("reports", RUN_ID, "IMGS")
+    reconstruction_imgs = os.path.join("reports", RUN_ID, "Translate_FROM_TO_IMG")
     processed_imgs = os.path.join("data/processed", RUN_ID)
     split_file = os.path.join("data/processed", RUN_ID, "sample_split.parquet")
     mapping_file = os.path.join("data/raw", sample_file)
@@ -126,7 +126,7 @@ def predict_images_and_calculate_mse(mappings, processed_path):
         orgimg_path = os.path.join(processed_path, row["img_paths"])
         file_ext = ".png" if "TCGA" in RUN_ID else ".tif"
         img_img_path = os.path.join(
-            "reports", RUN_ID, "IMGS_IMG", row["sample_ids"] + file_ext
+            "reports", RUN_ID, "Reference_TO_TO_IMG", row["sample_ids"] + file_ext
         )
 
         img_raw = read_img(orgimg_path, out_orig)
