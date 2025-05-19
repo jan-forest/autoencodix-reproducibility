@@ -707,14 +707,21 @@ def main(run_id):
 
     ## Plot Coverage if available ##
     if cfg["CHECKPT_PLOT"] and (not cfg["MODEL_TYPE"] == "x-modalix"):
-        lat_coverage_epoch = pd.read_parquet(
-            os.path.join(
+        # Check if coverage file exists
+        cov_file = os.path.join(
                 "reports",
                 f"{cfg['RUN_ID']}",
                 f'latent_cov_per_epoch_{cfg["RUN_ID"]}.parquet',
             )
-        )
-        plot_cov_epoch(cfg=cfg, lat_coverage_epoch=lat_coverage_epoch)
+        if os.path.exists(cov_file):        
+            lat_coverage_epoch = pd.read_parquet(
+                os.path.join(
+                    "reports",
+                    f"{cfg['RUN_ID']}",
+                    f'latent_cov_per_epoch_{cfg["RUN_ID"]}.parquet',
+                )
+            )
+            plot_cov_epoch(cfg=cfg, lat_coverage_epoch=lat_coverage_epoch)
 
     anno_name = [
         data_type
