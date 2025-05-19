@@ -8,7 +8,7 @@ sbatch <<EOT
 #SBATCH --time=4:00:00
 #SBATCH --cpus-per-task=6
 #SBATCH --gres=gpu:1
-#SBATCH --mem-per-cpy=8GB
+#SBATCH --mem-per-cpu=8GB
 
 echo "Doing Experiment 6: TCGA METH -> RNA X-Modalix"
 
