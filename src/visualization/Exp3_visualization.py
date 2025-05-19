@@ -8,8 +8,8 @@ import seaborn as sns
 import seaborn.objects as so
 from matplotlib import pyplot as plt
 
-# rootdir = "./"
-rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
+rootdir = "./"
+# rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
 
 
 rootsave = "./reports/paper-visualizations/Exp3/"
@@ -141,8 +141,8 @@ params["L"] = "learn_rate"
 
 # root = "./"
 
-# output_type = ".png"
-output_type = ".svg"
+output_type = ".png"
+# output_type = ".svg"
 
 
 config_prefix = "Exp3_"

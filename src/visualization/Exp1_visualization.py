@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import SymLogNorm
 import yaml
 
-# rootdir = "./"
-rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
+rootdir = "./"
+# rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
 output_type = ".png"
 
 print("Make Exp1 Paper plots - SC")

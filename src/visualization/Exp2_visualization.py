@@ -19,8 +19,8 @@ sns.set_style("whitegrid")
 ## Pre-settings
 config_prefix_list = ["Exp2_TCGA_tune", "Exp2_SC_tune"]
 
-# rootdir = "./"
-rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
+rootdir = "./"
+# rootdir = "/mnt/c/Users/ewald/Nextcloud/eigene_shares/AutoEncoderOmics/SaveResults/250507_first_revision_results/"
 
 rootsave = "./reports/paper-visualizations/Exp2/"
 output_type = ".png"
