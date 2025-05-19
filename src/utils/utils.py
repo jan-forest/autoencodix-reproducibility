@@ -958,24 +958,27 @@ def train_ae_model(
                 np.power(len(latent_space.index), 1 / len(latent_space.columns))
             )
             if bins_per_dim < 2:
-                logger.warning(
-                    "Coverage calculation is meaningless since combination of sample size and latent dimension results in less than 2 bins."
-                )
-            latent_bins = latent_space.apply(lambda x: pd.cut(x, bins=bins_per_dim))
-            latent_bins = pd.Series(zip(*[latent_bins[col] for col in latent_bins]))
+                # Make warning only once
+                if epoch == 0:
+                    logger.warning(
+                        "Coverage calculation is meaningless since combination of sample size and latent dimension results in less than 2 bins."
+                    )
+            else:
+                latent_bins = latent_space.apply(lambda x: pd.cut(x, bins=bins_per_dim))
+                latent_bins = pd.Series(zip(*[latent_bins[col] for col in latent_bins]))
 
-            lat_coverage = dict()
-            lat_coverage["coverage"] = len(latent_bins.unique()) / np.power(
-                bins_per_dim, len(latent_space.columns)
-            )
-            lat_coverage["epoch"] = epoch
-            lat_coverage["total_correlation"] = total_correlation(latent_space=latent_space)
-            lat_coverage_epoch = pd.concat(
-                [
-                    lat_coverage_epoch,
-                    pd.DataFrame(lat_coverage, index=[lat_coverage["epoch"]]),
-                ]
-            )
+                lat_coverage = dict()
+                lat_coverage["coverage"] = len(latent_bins.unique()) / np.power(
+                    bins_per_dim, len(latent_space.columns)
+                )
+                lat_coverage["epoch"] = epoch
+                lat_coverage["total_correlation"] = total_correlation(latent_space=latent_space)
+                lat_coverage_epoch = pd.concat(
+                    [
+                        lat_coverage_epoch,
+                        pd.DataFrame(lat_coverage, index=[lat_coverage["epoch"]]),
+                    ]
+                )
 
         if epoch < 50 and cfg["CHECKPT_PLOT"]:
             checkpoint_interval = 10

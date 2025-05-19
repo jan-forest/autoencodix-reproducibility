@@ -29,7 +29,7 @@ else
     log_message "Virtual environment '$VENV_DIR' does not exist. Creating..."
     make create_environment
     log_message "Activating environment"
-    source venv-gallia/bin/activate ## TODO rename env name?
+    source venv-gallia/bin/activate 
     log_message "Installing all requirements"
     make requirements
 fi
@@ -159,29 +159,30 @@ log_message "Exp4 X-Modalix with regression done"
 log_message "Copying visualizations to reports/paper-visualizations/Exp4"
 
 mkdir -p ./reports/paper-visualizations/Exp4/temp
-mv ./reports/paper-visualizations/Exp4/* ./reports/paper-visualizations/Exp4/temp
-mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A_Boxplot_MSE_Exp_4.png
-mv ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B_Barplot_Exp_4.png
-mv ./reports/paper-visualizations/Exp4/temp/xmodalix_eval_regression_metrics.csv ./reports/paper-visualizations/Exp4/Table_S4_R2_values_Exp_4.csv
-mv ./reports/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4_G_rel_loss_Exp_4.png
+cp ./reports/paper-visualizations/Exp4/* ./reports/paper-visualizations/Exp4/temp
+cp ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp4/Figure_S5_A_Boxplot_MSE_Exp_4.png
+cp ./reports/paper-visualizations/Exp4/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp4/Figure_S5_B_Barplot_Exp_4.png
+cp ./reports/paper-visualizations/Exp4/temp/xmodalix_eval_regression_metrics.csv ./reports/paper-visualizations/Exp4/Table_S4_R2_values_Exp_4.csv
+cp ./reports/Exp4_Celegans_TF/figures/latent2D_Aligned_extra_class_labels.png ./reports/paper-visualizations/Exp4/Figure_4F_2DLatent.png
+cp ./reports/Exp4_Celegans_TF/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp4/Figure_4G_rel_loss.png
 
- # Figure_4_H_Celegans_Grid
-mkdir -p ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid
-cp ./reports/Exp4_Celegans_TF/IMGS/T_16.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_16_translated.tif
-cp ./reports/Exp4_Celegans_TF/IMGS/T_74.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_74_translated.tif
-cp ./reports/Exp4_Celegans_TF/IMGS/T_166.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_166_translated.tif
-cp reports/Exp4_Celegans_TF/IMGS/T_204.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_204_translated.tif
-# do from the IMGS_IMG folder and add _img_img_to_translated suffix
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_16.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_16_img_img_to_translated.tif
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_74.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_74_img_img_to_translated.tif
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_166.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_166_img_img_to_translated.tif
-cp ./reports/Exp4_Celegans_TFImgImg/IMGS_IMG/T_204.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_204_img_img_to_translated.tif
+ # Figure_4H_Celegans_Grid
+mkdir -p ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid
+cp ./reports/Exp4_Celegans_TF/Translate_FROM_TO_IMG/T_16.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_16_translated.tif
+cp ./reports/Exp4_Celegans_TF/Translate_FROM_TO_IMG/T_74.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_74_translated.tif
+cp ./reports/Exp4_Celegans_TF/Translate_FROM_TO_IMG/T_166.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_166_translated.tif
+cp reports/Exp4_Celegans_TF/Translate_FROM_TO_IMG/T_206.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_206_translated.tif
+# do from the Reference_TO_TO_IMG folder and add reference_to_to suffix
+cp ./reports/Exp4_Celegans_TFImgImg/Reference_TO_TO_IMG/T_16.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_16_reference_to_to.tif
+cp ./reports/Exp4_Celegans_TFImgImg/Reference_TO_TO_IMG/T_74.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_74_reference_to_to.tif
+cp ./reports/Exp4_Celegans_TFImgImg/Reference_TO_TO_IMG/T_166.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_166_reference_to_to.tif
+cp ./reports/Exp4_Celegans_TFImgImg/Reference_TO_TO_IMG/T_206.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_206_reference_to_to.tif
 
 # do for the original images and use _original suffix data/raw/images/ALY-2_SYS721/
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t16.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_16_original.tif
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t74.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_74_original.tif
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t166.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_166_original.tif
-cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t204.tif ./reports/paper-visualizations/Exp4/Figure_4_H_Celegans_Grid/T_204_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t16.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_16_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t74.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_74_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t166.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_166_original.tif
+cp ./data/raw/images/ALY-2_SYS721/ALY-2_SYS721_t206.tif ./reports/paper-visualizations/Exp4/Figure_4H_Celegans_Grid/T_206_original.tif
 rm -r ./reports/paper-visualizations/Exp4/temp
 
 bash ./clean.sh Exp4_Celegans_TF,Exp4_CelegansImgImg true true # Clean up and keep only reports folder
@@ -241,13 +242,14 @@ log_message "Exp5 removed intermediate data"
 # Get paper visualization
 log_message "Copying visualizations to reports/paper-visualizations/Exp5"
 mkdir -p ./reports/paper-visualizations/Exp5/temp
-mv ./reports/paper-visualizations/Exp5/* ./reports/paper-visualizations/Exp5/temp
+cp ./reports/paper-visualizations/Exp5/* ./reports/paper-visualizations/Exp5/temp
 # move the below files from temp to the main folder
-mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C_MSE_Boxplot_Exp_5.png
-mv ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D_MSE_Barplot_Exp_5.png
-mv ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S5_F1_Classifier.csv
-mv ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4_C_rel_loss_Exp_5.png
-mv ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4_D_Digit_Grid.png
+cp ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_boxplot.png ./reports/paper-visualizations/Exp5/Figure_S5_C_MSE_Boxplot.png
+cp ./reports/paper-visualizations/Exp5/temp/xmodal_vs_normal_test_bar.png ./reports/paper-visualizations/Exp5/Figure_S5_D_MSE_Barplot.png
+cp ./reports/paper-visualizations/Exp5/temp/xmodalix_eval_classifier_metrics.csv ./reports/paper-visualizations/Exp5/Table_S5_F1_Classifier.csv
+cp ./reports/Exp5_TCGA_MNIST/figures/latent2D_Aligned_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4B_2DLatent.png
+cp ./reports/Exp5_TCGA_MNIST/figures/loss_plot_relative.png ./reports/paper-visualizations/Exp5/Figure_4C_rel_loss.png
+cp ./reports/Exp5_TCGA_MNIST/figures/translategrid_extra_class_labels.png ./reports/paper-visualizations/Exp5/Figure_4D_Digit_Grid.png
 rm -r ./reports/paper-visualizations/Exp5/temp
 
 log_message "Exp5 ALL DONE"
