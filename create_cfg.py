@@ -794,6 +794,9 @@ print("Config created for Experiment 5 ImgImg")
 
 
 
+
+
+
 #################################################
 ### cfg for x-modalix examples "Experiment 6" ###
 
@@ -812,20 +815,20 @@ cfg["BATCH_SIZE"] = 512
 
 cfg["RECON_SAVE"] = True
 cfg['LR_FIXED'] = 0.0005
-cfg['EPOCHS'] = 500
+cfg['EPOCHS'] = 1000
 cfg['RECONSTR_LOSS'] = "MSE"
 cfg['VAE_LOSS'] = "KL"
 cfg['PREDICT_SPLIT'] = "all"
 cfg['TRAIN_TYPE'] = "train"
 cfg['MODEL_TYPE'] = "x-modalix"
-cfg['BETA'] = 0.05
+cfg['BETA'] = 0.1
 cfg['GAMMA'] = 10
 cfg['DROP_P'] = 0.2
 
 cfg['SPLIT'] = [0.7, 0.2, 0.1]
 # X-modalix specific
-cfg["DELTA_PAIR"] = 0
-cfg["DELTA_CLASS"] = 10
+cfg["DELTA_PAIR"] = 10
+cfg["DELTA_CLASS"] = 0
 cfg["ANNEAL_PRETRAINING"] = False
 cfg["TRANSLATE"] = "METH_to_RNA"
 cfg["PRETRAIN_TARGET_MODALITY"] = ""
@@ -867,7 +870,7 @@ cfg['CLINIC_PARAM'] = [
 
 cfg["CLASS_PARAM"] = "CANCER_TYPE"
 # cfg["CLASS_PARAM"] = None
-cfg['DIM_RED_METH'] = "PCA"
+cfg['DIM_RED_METH'] = "UMAP"
 cfg["ML_TYPE"] = dict()
 cfg["ML_TYPE"] = "Auto-detect"
 cfg["ML_ALG"] = ["Linear", "RF"]
@@ -905,21 +908,21 @@ cfg["CHECKPT_PLOT"] = True
 cfg["LATENT_DIM_FIXED"] = 12
 cfg["BATCH_SIZE"] = 512
 cfg['LR_FIXED'] = 0.0005
-cfg['EPOCHS'] = 500
+cfg['EPOCHS'] = 1000
 cfg['RECONSTR_LOSS'] = "MSE"
 cfg['VAE_LOSS'] = "KL"
 cfg['PREDICT_SPLIT'] = "all"
 cfg['TRAIN_TYPE'] = "train"
 cfg['MODEL_TYPE'] = "x-modalix"
-cfg['BETA'] = 0.05
+cfg['BETA'] = 0.1
 cfg["GAMMA"] = 10
 cfg['DROP_P'] = 0.2
 
 # X-modalix specific
-cfg["DELTA_PAIR"] = 0
+cfg["DELTA_PAIR"] = 10
 
 cfg["PRETRAIN_TARGET_MODALITY"] = ""
-cfg["DELTA_CLASS"] = 10
+cfg["DELTA_CLASS"] = 0
 cfg["ANNEAL_PRETRAINING"] = False
 cfg["PRETRAIN_EPOCHS"] = 0
 cfg["TRANSLATE"] = "RNA_to_RNA"
@@ -949,7 +952,6 @@ cfg['CLINIC_PARAM'] = [
 	"AGE", 
 	"SEX", 
 	"AJCC_PATHOLOGIC_TUMOR_STAGE_SHORT", 
-	# "AJCC_PATHOLOGIC_TUMOR_STAGE",
 	"OS_STATUS", 
 	"OS_MONTHS", 
 	"DFS_STATUS", 
@@ -961,7 +963,7 @@ cfg['CLINIC_PARAM'] = [
 cfg["CLASS_PARAM"] = "CANCER_TYPE"
 # cfg["CLASS_PARAM"] = None
 
-cfg['DIM_RED_METH'] = "PCA"
+cfg['DIM_RED_METH'] = "UMAP"
 cfg["PLOT_INDPUT2D"] = True
 
 
@@ -988,13 +990,13 @@ cfg["CHECKPT_PLOT"] = True
 cfg["LATENT_DIM_FIXED"] = 12
 cfg["BATCH_SIZE"] = 512
 cfg['LR_FIXED'] = 0.0005
-cfg['EPOCHS'] = 500
+cfg['EPOCHS'] = 1000
 cfg['RECONSTR_LOSS'] = "MSE"
 cfg['VAE_LOSS'] = "KL"
 cfg['PREDICT_SPLIT'] = "all"
 cfg['TRAIN_TYPE'] = "train"
 cfg['MODEL_TYPE'] = "varix"
-cfg['BETA'] = 0.05
+cfg['BETA'] = 0.1
 cfg['DROP_P'] = 0.2
 
 
@@ -1037,7 +1039,7 @@ cfg['CLINIC_PARAM'] = [
 ]
 cfg["CLASS_PARAM"] = "CANCER_TYPE"
 # cfg["CLASS_PARAM"] = None
-cfg['DIM_RED_METH'] = "PCA"
+cfg['DIM_RED_METH'] = "UMAP"
 
 cfg["PLOT_INDPUT2D"] = True
 cfg["ML_TYPE"] = dict()
