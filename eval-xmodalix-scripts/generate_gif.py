@@ -133,7 +133,7 @@ if __name__ == "__main__":
     # RUN_ID="CelegansIterations10"
     cfg = get_cfg(run_id=RUN_ID)
     original_folder = os.path.join("data/processed", RUN_ID)
-    reconstructed_folder = os.path.join("reports", RUN_ID, "IMGS")
+    reconstructed_folder = os.path.join("reports", RUN_ID, "Translate_FROM_TO_IMG")
 
     global result_dir
     result_dir = os.path.join("reports", "paper-visualizations", RUN_ID.split("_")[0])

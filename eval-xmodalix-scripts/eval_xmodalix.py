@@ -156,7 +156,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
 
     test_dataset_reconstructed = ExtraClassLabelsDataset(
         test_df,
-        os.path.join("reports", run_id, "IMGS"),
+        os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         mapping=mapping,
         transform=transform,
         col="rec_paths",
@@ -164,7 +164,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
 
     train_dataset_reconstructed = ExtraClassLabelsDataset(
         train_df,
-        os.path.join("reports", run_id, "IMGS"),
+        os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         mapping=mapping,
         transform=transform,
         col="rec_paths",
@@ -172,7 +172,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
 
     valid_dataset_reconstructed = ExtraClassLabelsDataset(
         valid_df,
-        os.path.join("reports", run_id, "IMGS"),
+        os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         mapping=mapping,
         transform=transform,
         col="rec_paths",
