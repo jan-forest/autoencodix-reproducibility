@@ -2,7 +2,7 @@ sbatch <<EOT
 #!/bin/bash
 #SBATCH --job-name=autoencoder_Exp6_TCGA_METH_RNA
 #SBATCH --output=./reports/Exp6_TCGA_METH_RNA/slurm_%a_%j.out
-#SBATCH --error=./reports/Exp5_TCGA_METH_RNA/slurm_%a_%j.err
+#SBATCH --error=./reports/Exp6_TCGA_METH_RNA/slurm_%a_%j.err
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=4:00:00
