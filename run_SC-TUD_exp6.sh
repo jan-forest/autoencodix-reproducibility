@@ -14,7 +14,7 @@ echo "Doing Experiment 6: TCGA METH -> RNA X-Modalix"
 
 export CUBLAS_WORKSPACE_CONFIG=:16:8
 
-./run_exp5.sh
+./run_exp6.sh
 if [ -z "$VIRTUAL_ENV" ];
 then 
 	source venv-gallia/bin/activate
