@@ -25,7 +25,7 @@ nephelai upload-with-fs reports/Expt6_TCGA_RNA_RNA
 nephelai upload-with-fs reports/Expt6_TCGA_VARIX
 nephelai upload-with-fs reports/paper-visualizations/Exp6
 
-bash ./clean.sh -r Exp6_TCGA_METH_RNA,Exp6_TCGA_RNA_RNA, Exp6_TCGA_VARIX -k -d # Clean up and keep only reports folder
+#bash ./clean.sh -r Exp6_TCGA_METH_RNA,Exp6_TCGA_RNA_RNA, Exp6_TCGA_VARIX -k -d # Clean up and keep only reports folder
 
 exit 0
 EOT
