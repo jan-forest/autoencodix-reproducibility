@@ -57,20 +57,20 @@ class ExtraClassLabelsDataset(Dataset):
         label = self.mapping[self.df.iloc[idx]["num_class_label"]]
 
         with rasterio.open(img_name) as src:
+            # Read image data
             img = src.read()
             img = np.transpose(img, (1, 2, 0))
-            img = (
-                img[:, :, :3]
-                if img.shape[2] > 3
-                else np.repeat(img, 3, axis=2)
-                if img.shape[2] == 1
-                else img
-            )
-            img = (img * 255).astype("uint8")
-            image = Image.fromarray(img, "RGB")
 
-        if self.transform:
-            image = self.transform(image)
+            if img.shape[2] > 1:
+                gray_img = np.mean(img, axis=2).astype(img.dtype)
+            else:
+                gray_img = img[:, :, 0]
+
+            gray_img_uint8 = (gray_img * 255).astype("uint8")
+
+            image = Image.fromarray(gray_img_uint8, mode="L")
+
+        image = torch.from_numpy(np.array(image)).float().unsqueeze(0) / 255.0
 
         return image, label
 
@@ -112,13 +112,6 @@ def prepare_data(cfg, run_id):
 
 def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
     """Create DataLoaders for training, validation, and testing"""
-    transform = transforms.Compose(
-        [
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ]
-    )
     mapping = {"Q1": 0, "Q2": 1, "Q3": 2, "Q4": 3}
     cancer_mapping = {
         "Breast Cancer": 0,
@@ -134,7 +127,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         train_df,
         os.path.join("data/processed", run_id),
         mapping=mapping,
-        transform=transform,
         col="img_paths",
     )
 
@@ -142,7 +134,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         valid_df,
         os.path.join("data/processed", run_id),
         mapping=mapping,
-        transform=transform,
         col="img_paths",
     )
 
@@ -150,7 +141,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         test_df,
         os.path.join("data/processed", run_id),
         mapping=mapping,
-        transform=transform,
         col="img_paths",
     )
 
@@ -158,7 +148,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         test_df,
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         mapping=mapping,
-        transform=transform,
         col="rec_paths",
     )
 
@@ -166,7 +155,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         train_df,
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         mapping=mapping,
-        transform=transform,
         col="rec_paths",
     )
 
@@ -174,7 +162,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         valid_df,
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         mapping=mapping,
-        transform=transform,
         col="rec_paths",
     )
 
@@ -270,7 +257,6 @@ def evaluate(model, data_loader, device):
 def plot_losses(
     train_losses, val_losses, run_id, outpath="xmodalix_eval_classifier_losses.png"
 ):
-
     plt.figure(figsize=(10, 6))
     plt.plot(train_losses, label="Training Loss")
     plt.plot(val_losses, label="Validation Loss")
@@ -300,7 +286,9 @@ class SimpleCNN(nn.Module):
     def __init__(self, num_classes=4):
         super(SimpleCNN, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(
+                1, 16, kernel_size=3, stride=1, padding=1
+            ),  # Changed from 3 to 1 for grayscale
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
