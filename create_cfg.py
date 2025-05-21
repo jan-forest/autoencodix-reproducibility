@@ -8,6 +8,89 @@ Path(config_save_root).mkdir(parents=False, exist_ok=True)
 #############################################
 ### cfg for beta-influence "Experiment 1" ###
 
+# cfg_prefix = "Exp1"
+# cfg = dict()
+
+# cfg_folder = config_save_root + cfg_prefix
+# Path(cfg_folder).mkdir(parents=False, exist_ok=True)
+
+# cfg['FIX_RANDOMNESS'] = 'all'
+# cfg['GLOBAL_SEED'] = 42
+# cfg["CHECKPT_PLOT"] = True
+# cfg["FIX_XY_LIM"] = [[-10,150], [-10,150]] # Special Param only for Exp1, not in Repo
+# cfg["ANNEAL"] = "5phase-constant"
+# cfg["LATENT_DIM_FIXED"] = 2
+# cfg["BATCH_SIZE"] = 256
+# cfg['LR_FIXED'] = 0.0001
+# cfg['EPOCHS'] = 2000
+# cfg['RECONSTR_LOSS'] = "MSE"
+# cfg['VAE_LOSS'] = "KL"
+# cfg['PREDICT_SPLIT'] = "all"
+# cfg['TRAIN_TYPE'] = "train"
+# cfg['MODEL_TYPE'] = "varix"
+# cfg['BETA'] = 10
+# cfg['SPLIT'] = [0.6, 0.2, 0.2]
+
+# ### sc-Cortex
+# cfg['K_FILTER'] = 1500
+# cfg['DATA_TYPE'] = dict()
+# cfg['DATA_TYPE']['ANNO'] = dict()
+# cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
+# cfg['CLINIC_PARAM'] = [
+# 				"author_cell_type" 
+# 			]
+
+# cfg['DIM_RED_METH'] = "UMAP"
+
+# dm = ["RNA", "METH"]
+# for m in dm:								
+# 	cfg['DATA_TYPE'][m] = dict()
+# 	cfg['DATA_TYPE'][m]['SCALING'] = "Standard"
+# 	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
+# 	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
+# 	cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "scATAC_human_cortex_clinical_formatted.parquet"
+# 	if m == "RNA":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "scRNA_human_cortex_formatted.parquet"
+# 	if m == "METH":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "scATAC_human_cortex_formatted.parquet"
+
+
+# run_id = cfg_prefix + "_SC_Annealing"
+# with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+# 	yaml.dump(cfg, file)
+# ### TCGA
+# cfg['K_FILTER'] = 2000
+# cfg['DATA_TYPE'] = dict()
+# cfg['DATA_TYPE']['ANNO'] = dict()
+# cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
+# cfg['CLINIC_PARAM'] = [
+# 				"CANCER_TYPE_ACRONYM" 
+# 			]
+
+# cfg['DIM_RED_METH'] = "UMAP"
+
+# dm = ["RNA", "METH", "MUT"]
+# for m in dm:								
+# 	cfg['DATA_TYPE'][m] = dict()
+# 	cfg['DATA_TYPE'][m]['SCALING'] = "Standard"
+# 	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
+# 	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
+# 	cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
+# 	if m == "RNA":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet"
+# 	if m == "METH":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet"
+# 	if m == "MUT":
+# 		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_combi_MUT_CNA_formatted.parquet"
+
+
+# run_id = cfg_prefix + "_TCGA_Annealing"
+# with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+# 	yaml.dump(cfg, file)
+# print("Config created for Experiment 1")
+#####################################################
+### New Experiment 1 ###############################
+
 cfg_prefix = "Exp1"
 cfg = dict()
 
@@ -634,7 +717,7 @@ for m in dm:
 		cfg['DATA_TYPE'][m]['SCALING'] = "MinMax"
 		cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
 		cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
-		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet" 
+		cfg['DATA_TYPE'][m]['FILE_RAW'] = "combined_rnaseq_formatted.parquet" 
 	elif m == "IMG":
 		cfg['DATA_TYPE'][m]['SCALING'] = "NoScaler"
 		cfg['DATA_TYPE'][m]['FILTERING'] = "NoFilt"
@@ -708,3 +791,267 @@ run_id = cfg_prefix + "_TCGA_MNISTImgImg"
 with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
 	yaml.dump(cfg, file)
 print("Config created for Experiment 5 ImgImg")
+
+
+
+
+
+
+#################################################
+### cfg for x-modalix examples "Experiment 6" ###
+
+cfg_prefix = "Exp6"
+cfg = dict()
+
+cfg_folder = config_save_root + cfg_prefix
+Path(cfg_folder).mkdir(parents=False, exist_ok=True)
+
+cfg['FIX_RANDOMNESS'] = 'all'
+cfg['GLOBAL_SEED'] = 42
+cfg["CHECKPT_PLOT"] = True
+cfg["SUBTYPES"] = ["brca", "lusc", "luad", "ov", "coadread", "ucec", "ucs"]
+cfg["LATENT_DIM_FIXED"] = 12
+cfg["BATCH_SIZE"] = 512
+
+cfg["RECON_SAVE"] = True
+cfg['LR_FIXED'] = 0.0005
+cfg['EPOCHS'] = 1000
+cfg['RECONSTR_LOSS'] = "MSE"
+cfg['VAE_LOSS'] = "KL"
+cfg['PREDICT_SPLIT'] = "all"
+cfg['TRAIN_TYPE'] = "train"
+cfg['MODEL_TYPE'] = "x-modalix"
+cfg['BETA'] = 0.1
+cfg['GAMMA'] = 10
+cfg['DROP_P'] = 0.2
+
+cfg['SPLIT'] = [0.7, 0.2, 0.1]
+# X-modalix specific
+cfg["DELTA_PAIR"] = 10
+cfg["DELTA_CLASS"] = 0
+cfg["ANNEAL_PRETRAINING"] = False
+cfg["TRANSLATE"] = "METH_to_RNA"
+cfg["PRETRAIN_TARGET_MODALITY"] = ""
+
+cfg['K_FILTER'] = 4000
+cfg['DATA_TYPE'] = dict()
+cfg['DATA_TYPE']['ANNO'] = dict()
+cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
+cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "combined_clin_formatted.parquet"
+# cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
+dm = ["RNA", "METH"]
+for m in dm:
+	cfg['DATA_TYPE'][m] = dict()
+	cfg['DATA_TYPE'][m]['SCALING'] = "MinMax"
+	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
+	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
+
+	cfg['DATA_TYPE'][m]['FILE_RAW'] = "combined_meth_formatted.parquet"
+	# cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet"
+	if m == "RNA":
+		cfg['DATA_TYPE'][m]['FILE_RAW'] = "combined_rnaseq_formatted.parquet"
+		# cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet"
+cfg['CLINIC_PARAM'] = [
+	"CANCER_TYPE", 
+	"CANCER_TYPE_ACRONYM", 
+	"TMB_NONSYNONYMOUS", 
+	"AGE", 
+	"SEX", 
+	"AJCC_PATHOLOGIC_TUMOR_STAGE_SHORT", 
+	# "AJCC_PATHOLOGIC_TUMOR_STAGE",
+	"OS_STATUS", 
+	"OS_MONTHS", 
+	"DFS_STATUS", 
+	"PFS_STATUS", 
+	"MSI_SCORE_MANTIS", 
+	"ANEUPLOIDY_SCORE"
+]
+
+
+cfg["CLASS_PARAM"] = "CANCER_TYPE"
+# cfg["CLASS_PARAM"] = None
+cfg['DIM_RED_METH'] = "UMAP"
+cfg["ML_TYPE"] = dict()
+cfg["ML_TYPE"] = "Auto-detect"
+cfg["ML_ALG"] = ["Linear", "RF"]
+cfg["ML_SPLIT"] =  "use-split" # OPTIONAL "use-split" or "CV-on-all-data"
+cfg["ML_TASKS"]  = ["Latent", "PCA", "UMAP", "RandomFeature"]
+
+
+
+run_id = cfg_prefix + "_TCGA_METH_RNA"
+with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+	yaml.dump(cfg, file)
+print("Config created for Experiment 6")
+
+ ## Exp 6 RNA to RNA
+ # -------------------------------------------------------
+ # --------------------------------------------------------
+cfg_prefix = "Exp6"
+cfg = dict()
+
+cfg["SUBTYPES"] = ["brca", "lusc", "luad", "ov", "coadread", "ucec", "ucs"]
+cfg["ML_TYPE"] = dict()
+cfg["ML_TYPE"] = "Auto-detect"
+
+cfg["ML_ALG"] = ["Linear", "RF"]
+cfg["ML_SPLIT"] =  "use-split" # OPTIONAL "use-split" or "CV-on-all-data"
+cfg["ML_TASKS"]  = ["Latent", "PCA", "UMAP", "RandomFeature"]
+
+
+cfg_folder = config_save_root + cfg_prefix
+Path(cfg_folder).mkdir(parents=False, exist_ok=True)
+
+cfg['FIX_RANDOMNESS'] = 'all'
+cfg['GLOBAL_SEED'] = 42
+cfg["CHECKPT_PLOT"] = True
+cfg["LATENT_DIM_FIXED"] = 12
+cfg["BATCH_SIZE"] = 512
+cfg['LR_FIXED'] = 0.0005
+cfg['EPOCHS'] = 1000
+cfg['RECONSTR_LOSS'] = "MSE"
+cfg['VAE_LOSS'] = "KL"
+cfg['PREDICT_SPLIT'] = "all"
+cfg['TRAIN_TYPE'] = "train"
+cfg['MODEL_TYPE'] = "x-modalix"
+cfg['BETA'] = 0.1
+cfg["GAMMA"] = 10
+cfg['DROP_P'] = 0.2
+
+# X-modalix specific
+cfg["DELTA_PAIR"] = 10
+
+cfg["PRETRAIN_TARGET_MODALITY"] = ""
+cfg["DELTA_CLASS"] = 0
+cfg["ANNEAL_PRETRAINING"] = False
+cfg["PRETRAIN_EPOCHS"] = 0
+cfg["TRANSLATE"] = "RNA_to_RNA"
+cfg["RECON_SAVE"] = True
+cfg["PLOT_INDPUT2D"] = True
+
+
+cfg['K_FILTER'] = 4000
+cfg['DATA_TYPE'] = dict()
+cfg['DATA_TYPE']['ANNO'] = dict()
+cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
+cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "combined_clin_formatted.parquet"
+# cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
+dm = ["RNA"]
+for m in dm:
+	cfg['DATA_TYPE'][m] = dict()
+	cfg['DATA_TYPE'][m] = dict()
+	cfg['DATA_TYPE'][m]['SCALING'] = "MinMax"
+	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
+	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
+	cfg['DATA_TYPE'][m]['FILE_RAW'] = "combined_rnaseq_formatted.parquet"
+	# cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet"
+cfg['CLINIC_PARAM'] = [
+	"CANCER_TYPE", 
+	"CANCER_TYPE_ACRONYM", 
+	"TMB_NONSYNONYMOUS", 
+	"AGE", 
+	"SEX", 
+	"AJCC_PATHOLOGIC_TUMOR_STAGE_SHORT", 
+	"OS_STATUS", 
+	"OS_MONTHS", 
+	"DFS_STATUS", 
+	"PFS_STATUS", 
+	"MSI_SCORE_MANTIS", 
+	"ANEUPLOIDY_SCORE"
+]
+
+cfg["CLASS_PARAM"] = "CANCER_TYPE"
+# cfg["CLASS_PARAM"] = None
+
+cfg['DIM_RED_METH'] = "UMAP"
+cfg["PLOT_INDPUT2D"] = True
+
+
+
+run_id = cfg_prefix + "_TCGA_RNA_RNA"
+with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+	yaml.dump(cfg, file)
+
+
+# Exp 6 Varix compare run
+# -------------------------------------------------------
+# --------------------------------------------------------
+
+cfg_prefix = "Exp6"
+cfg = dict()
+
+cfg["SUBTYPES"] = ["brca", "lusc", "luad", "ov", "coadread", "ucec", "ucs"]
+cfg_folder = config_save_root + cfg_prefix
+Path(cfg_folder).mkdir(parents=False, exist_ok=True)
+
+cfg['FIX_RANDOMNESS'] = 'all'
+cfg['GLOBAL_SEED'] = 42
+cfg["CHECKPT_PLOT"] = True
+cfg["LATENT_DIM_FIXED"] = 12
+cfg["BATCH_SIZE"] = 512
+cfg['LR_FIXED'] = 0.0005
+cfg['EPOCHS'] = 1000
+cfg['RECONSTR_LOSS'] = "MSE"
+cfg['VAE_LOSS'] = "KL"
+cfg['PREDICT_SPLIT'] = "all"
+cfg['TRAIN_TYPE'] = "train"
+cfg['MODEL_TYPE'] = "varix"
+cfg['BETA'] = 0.1
+cfg['DROP_P'] = 0.2
+
+
+cfg["RECON_SAVE"] = True
+cfg["PLOT_INDPUT2D"] = True
+
+
+cfg['K_FILTER'] = 4000
+cfg['DATA_TYPE'] = dict()
+cfg['DATA_TYPE']['ANNO'] = dict()
+cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
+cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "combined_clin_formatted.parquet"
+# cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
+dm = ["METH", "RNA"]
+for m in dm:
+	cfg['DATA_TYPE'][m] = dict()
+	cfg['DATA_TYPE'][m] = dict()
+	cfg['DATA_TYPE'][m]['SCALING'] = "MinMax"
+	cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
+	cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
+	cfg['DATA_TYPE'][m]['FILE_RAW'] = "combined_meth_formatted.parquet"
+	# cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_methylation_per_gene_formatted.parquet"
+	if m == "RNA":
+		cfg['DATA_TYPE'][m]['FILE_RAW'] = "combined_rnaseq_formatted.parquet"
+		# cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet"
+cfg['CLINIC_PARAM'] = [
+	"CANCER_TYPE", 
+	"CANCER_TYPE_ACRONYM", 
+	"TMB_NONSYNONYMOUS", 
+	"AGE", 
+	"SEX", 
+	"AJCC_PATHOLOGIC_TUMOR_STAGE_SHORT", 
+	# "AJCC_PATHOLOGIC_TUMOR_STAGE",
+	"OS_STATUS", 
+	"OS_MONTHS", 
+	"DFS_STATUS", 
+	"PFS_STATUS", 
+	"MSI_SCORE_MANTIS", 
+	"ANEUPLOIDY_SCORE"
+]
+cfg["CLASS_PARAM"] = "CANCER_TYPE"
+# cfg["CLASS_PARAM"] = None
+cfg['DIM_RED_METH'] = "UMAP"
+
+cfg["PLOT_INDPUT2D"] = True
+cfg["ML_TYPE"] = dict()
+cfg["ML_TYPE"] = "Auto-detect"
+cfg["ML_ALG"] = ["Linear", "RF"]
+cfg["ML_SPLIT"] =  "use-split" # OPTIONAL "use-split" or "CV-on-all-data"
+cfg["ML_TASKS"]  = ["Latent", "PCA", "UMAP", "RandomFeature"]
+
+
+
+
+run_id = cfg_prefix + "_TCGA_VARIX"
+with open(cfg_folder+'/'+run_id +"_config.yaml", 'w') as file:
+	yaml.dump(cfg, file)
+
