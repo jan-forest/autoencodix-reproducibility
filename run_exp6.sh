@@ -46,20 +46,32 @@ else
 fi
 ####################################
 #### Prepare Runs ##################
+
+mkdir -p data/raw/
 log_message "Getting preprocessed data"
 bash ./get_preprocessed_data.sh
 
 log_message "Creating configs"
 $PYTHON_INTERPRETER create_cfg_exp6.py
 
-#### Exp5 TCGA and MNIST ####
+#### Exp6 TCGA and MNIST ####
 log_message "Starting Experiment 6: RNA and METH"
 mkdir -p ./reports/paper-visualizations/Exp6
 cp ./config_runs/Exp6/*.yaml .
-make visualize RUN_ID=Exp6_RNA_METH
+
+make  ml_task RUN_ID=Exp6_TCGA_METH_RNA
 log_message "Experiment 6 main run done"
 
-log_message "Starting RNA_to_RNA run for comparison"
-make visualize RUN_ID=Exp6_TCGA_METH_METH"
-log_message "Experiment 6 METH_to_METH run done"
-# TODO new downstream scripts
+log_message "Starting RNA_RNA run for comparison"
+make ml_task RUN_ID=Exp6_TCGA_RNA_RNA
+log_message "Experiment 6 RNA_to_RNA run done"
+
+
+log_message "Starting Varix run for comparison"
+make ml_task RUN_ID=Exp6_TCGA_VARIX
+
+#TODO new downstream scripts
+log_message "Experiment 6 Varix run done"
+log_message "Starting paper visualization"
+python eval-xmodalix-scripts/Exp6_visualization.py
+log_message "Experiment 6 paper visualization done"
