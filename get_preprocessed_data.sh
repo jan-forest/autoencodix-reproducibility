@@ -13,7 +13,7 @@ else
     ## Get SCcortex formatted data
     ## Get Ontology files
     # wget -nv -P data/raw https://zenodo.org/records/13691753/files/AutoencodixZenodoReproducibility.zip
-    wget -nv -P data/raw  https://cloud.scadsai.uni-leipzig.de/index.php/s/5Jkb78ySEML7qMg/download/250513_Autoencodix_Processed_Data_First_Revision.zip
+    wget -nv -P data/raw https://cloud.scadsai.uni-leipzig.de/index.php/s/McdajWx3rz5sKrm/download/Autoencodix_Reproducibility_First_REvision_Final_250521.zip
     unzip -q data/raw/250513_Autoencodix_Processed_Data_First_Revision.zip -d data/raw
     # unzip -q data/raw/AutoencodixZenodoReproducibility.zip -d data/raw
     rm data/raw/AutoencodixZenodoReproducibility.zip
