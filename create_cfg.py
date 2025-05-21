@@ -717,7 +717,7 @@ for m in dm:
 		cfg['DATA_TYPE'][m]['SCALING'] = "MinMax"
 		cfg['DATA_TYPE'][m]['FILTERING'] = "Var"
 		cfg['DATA_TYPE'][m]['TYPE'] = "NUMERIC"
-		cfg['DATA_TYPE'][m]['FILE_RAW'] = "data_mrna_seq_v2_rsem_formatted.parquet" 
+		cfg['DATA_TYPE'][m]['FILE_RAW'] = "combined_rnaseq_formatted.parquet" 
 	elif m == "IMG":
 		cfg['DATA_TYPE'][m]['SCALING'] = "NoScaler"
 		cfg['DATA_TYPE'][m]['FILTERING'] = "NoFilt"
