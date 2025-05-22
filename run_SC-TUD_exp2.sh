@@ -48,6 +48,7 @@ sbatch <<EOT
 #SBATCH --time=2:00:00
 #SBATCH --mem-per-cpu=8G
 #SBATCH --cpus-per-task=6
+#SBATCH --gres=gpu:1
 #SBATCH --dependency singleton
 if [ -z "$VIRTUAL_ENV" ];
 then 
