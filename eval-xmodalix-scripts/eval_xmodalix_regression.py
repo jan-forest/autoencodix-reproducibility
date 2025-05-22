@@ -17,6 +17,7 @@ import torch.nn as nn
 import torchvision.models as models
 import warnings
 import matplotlib
+import argparse
 
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -44,11 +45,12 @@ def get_cfg(run_id):
 
 
 class MyDataset(Dataset):
-    def __init__(self, df, img_dir, transform=None, col="img_paths"):
+    def __init__(self, df, img_dir, transform=None, col="img_paths", grayscale=False):
         self.df = df
         self.img_dir = img_dir
         self.transform = transform
         self.col = col
+        self.grayscale = grayscale
 
     def __len__(self):
         return len(self.df)
@@ -59,20 +61,55 @@ class MyDataset(Dataset):
         with rasterio.open(img_name) as src:
             img = src.read()
             img = np.transpose(img, (1, 2, 0))
-            img = (
-                img[:, :, :3]
-                if img.shape[2] > 3
-                else np.repeat(img, 3, axis=2)
-                if img.shape[2] == 1
-                else img
-            )
-            img = (img * 255).astype("uint8")
-            image = Image.fromarray(img, "RGB")
+            
+            if self.grayscale:
+                # Convert to grayscale
+                if img.shape[2] > 1:
+                    # If multi-channel, convert to grayscale by averaging channels
+                    gray_img = np.mean(img, axis=2).astype(img.dtype)
+                else:
+                    # Already single channel
+                    gray_img = img[:, :, 0]
+                
+                # Convert to uint8 for PIL
+                gray_img_uint8 = (gray_img * 255).astype("uint8")
+                
+                # Create PIL image in grayscale mode
+                image = Image.fromarray(gray_img_uint8, mode="L")
+            else:
+                # RGB processing (original logic)
+                img = (
+                    img[:, :, :3]
+                    if img.shape[2] > 3
+                    else np.repeat(img, 3, axis=2)
+                    if img.shape[2] == 1
+                    else img
+                )
+                img = (img * 255).astype("uint8")
+                image = Image.fromarray(img, "RGB")
 
         if self.transform:
             image = self.transform(image)
 
         return image, self.df.iloc[idx]["extra_class_labels"]
+
+
+def get_transforms(model_type):
+    """Get appropriate transforms based on model type"""
+    if model_type == "vgg16":
+        # VGG16 preprocessing - RGB with ImageNet normalization
+        return transforms.Compose([
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+    elif model_type == "simple_cnn":
+        # Simple CNN preprocessing - Grayscale, no resize (already 128x128)
+        return transforms.Compose([
+            transforms.ToTensor(),  # Converts to 0-1 range automatically
+        ])
+    else:
+        raise ValueError(f"Unknown model type: {model_type}")
 
 
 def prepare_data(cfg, run_id):
@@ -103,21 +140,17 @@ def prepare_data(cfg, run_id):
     return train_df, valid_df, test_df
 
 
-def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
+def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
     """Create DataLoaders for training, validation, and testing"""
-    transform = transforms.Compose(
-        [
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ]
-    )
+    transform = get_transforms(model_type)
+    use_grayscale = (model_type == "simple_cnn")
 
     train_dataset = MyDataset(
         train_df,
         os.path.join("data/processed", run_id),
         transform=transform,
         col="img_paths",
+        grayscale=use_grayscale,
     )
 
     valid_dataset = MyDataset(
@@ -125,6 +158,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         os.path.join("data/processed", run_id),
         transform=transform,
         col="img_paths",
+        grayscale=use_grayscale,
     )
 
     test_dataset_original = MyDataset(
@@ -132,6 +166,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         os.path.join("data/processed", run_id),
         transform=transform,
         col="img_paths",
+        grayscale=use_grayscale,
     )
 
     test_dataset_reconstructed = MyDataset(
@@ -139,6 +174,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         transform=transform,
         col="rec_paths",
+        grayscale=use_grayscale,
     )
 
     train_dataset_reconstructed = MyDataset(
@@ -146,6 +182,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         transform=transform,
         col="rec_paths",
+        grayscale=use_grayscale,
     )
 
     valid_dataset_reconstructed = MyDataset(
@@ -153,6 +190,7 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
         transform=transform,
         col="rec_paths",
+        grayscale=use_grayscale,
     )
 
     train_loader = DataLoader(train_dataset, batch_size=1, shuffle=True)
@@ -189,7 +227,6 @@ def train_model(
     valid_losses = []
 
     train_dataset_size = len(train_loader.dataset)
-
     valid_dataset_size = len(valid_loader.dataset)
 
     for epoch in range(num_epochs):
@@ -282,18 +319,18 @@ class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
+            nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1),  # Changed to 1 for grayscale
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 128x128 -> 64x64
             nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 64x64 -> 32x32
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),
+            nn.MaxPool2d(kernel_size=2, stride=2),  # 32x32 -> 16x16
         )
         self.regressor = nn.Sequential(
-            nn.Linear(64 * 28 * 28, 128),
+            nn.Linear(64 * 16 * 16, 128),  # Fixed for 128x128 input: 64 channels * 16 * 16
             nn.ReLU(inplace=True),
             nn.Dropout(0.5),
             nn.Linear(128, 1),  # Single output for regression
@@ -306,7 +343,8 @@ class SimpleCNN(nn.Module):
         return x
 
 
-def get_model():
+def get_vgg16_model():
+    """Get VGG16 model for regression"""
     model = models.vgg16(weights="DEFAULT")
 
     # Freeze all layers, except last one for transfer learning
@@ -322,7 +360,34 @@ def get_model():
     return model
 
 
-def main(run_id):
+def get_simple_cnn_model():
+    """Get Simple CNN model for regression"""
+    return SimpleCNN()
+
+
+def get_model(model_type):
+    """Get model based on type"""
+    if model_type == "vgg16":
+        return get_vgg16_model()
+    elif model_type == "simple_cnn":
+        return get_simple_cnn_model()
+    else:
+        raise ValueError(f"Unknown model type: {model_type}")
+
+
+def get_optimizer(model, model_type):
+    """Get appropriate optimizer based on model type"""
+    if model_type == "vgg16":
+        return optim.Adam(model.parameters(), lr=0.001)
+    elif model_type == "simple_cnn":
+        return optim.Adam(model.parameters(), lr=0.0005)
+    else:
+        raise ValueError(f"Unknown model type: {model_type}")
+
+
+def main(run_id, model_type):
+    print(f"Using model: {model_type}")
+    
     cfg = get_cfg(run_id)
     train_df, valid_df, test_df = prepare_data(cfg, run_id)
     (
@@ -332,12 +397,11 @@ def main(run_id):
         train_loader_reconstructed,
         valid_loader_reconstructed,
         test_loader_reconstructed,
-    ) = create_dataloaders(train_df, valid_df, test_df, cfg, run_id)
-    model = get_model()
-    # model = SimpleCNN()
-
+    ) = create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type)
+    
+    model = get_model(model_type)
     criterion = nn.MSELoss()
-    optimizer = optim.Adam(model.parameters(), lr=0.001)
+    optimizer = get_optimizer(model, model_type)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -371,8 +435,8 @@ def main(run_id):
     )
 
     del model
-    model_reconstructed = SimpleCNN()
-    optimizer_reconstructed = optim.Adam(model_reconstructed.parameters(), lr=0.0005)
+    model_reconstructed = get_model(model_type)
+    optimizer_reconstructed = get_optimizer(model_reconstructed, model_type)
 
     # Train with reconstructed data loaders
     train_losses_reconstructed, val_losses_reconstructed = train_model(
@@ -429,18 +493,33 @@ def main(run_id):
         }
     )
     print(metrics_df)
+    
+    # Include model type in filename
+    filename = f"xmodalix_eval_regression_metrics_{model_type}.csv"
     metrics_df.to_csv(
         os.path.join(
             "reports",
             "paper-visualizations",
             RUN_ID.split("_")[0],
-            "xmodalix_eval_regression_metrics.csv",
+            filename,
         ),
         index=False,
     )
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Train regression model with different architectures")
+    parser.add_argument("run_id", help="Run ID for the experiment")
+    parser.add_argument(
+        "--model", 
+        choices=["vgg16", "simple_cnn"], 
+        default="vgg16", 
+        help="Model type to use (default: vgg16)"
+    )
+    
+    args = parser.parse_args()
+    
     global RUN_ID
-    RUN_ID = sys.argv[1]
-    main(RUN_ID)
+    RUN_ID = args.run_id
+    
+    main(RUN_ID, args.model)
