@@ -57,19 +57,20 @@ class MyDataset(Dataset):
         img_name = os.path.join(self.img_dir, self.df.iloc[idx][self.col])
 
         with rasterio.open(img_name) as src:
-            # Read image data
             img = src.read()
             img = np.transpose(img, (1, 2, 0))
+            img = (
+                img[:, :, :3]
+                if img.shape[2] > 3
+                else np.repeat(img, 3, axis=2)
+                if img.shape[2] == 1
+                else img
+            )
+            img = (img * 255).astype("uint8")
+            image = Image.fromarray(img, "RGB")
 
-            # Handle different channel cases
-            if img.shape[2] > 1:
-                gray_img = np.mean(img, axis=2).astype(img.dtype)
-            else:
-                gray_img = img[:, :, 0]
-
-            gray_img_uint8 = (gray_img * 255).astype("uint8")
-            image = Image.fromarray(gray_img_uint8, mode="L")
-            image = torch.from_numpy(np.array(image)).float().unsqueeze(0) / 255.0
+        if self.transform:
+            image = self.transform(image)
 
         return image, self.df.iloc[idx]["extra_class_labels"]
 
@@ -104,40 +105,53 @@ def prepare_data(cfg, run_id):
 
 def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
     """Create DataLoaders for training, validation, and testing"""
+    transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
 
     train_dataset = MyDataset(
         train_df,
         os.path.join("data/processed", run_id),
+        transform=transform,
         col="img_paths",
     )
 
     valid_dataset = MyDataset(
         valid_df,
         os.path.join("data/processed", run_id),
+        transform=transform,
         col="img_paths",
     )
 
     test_dataset_original = MyDataset(
         test_df,
         os.path.join("data/processed", run_id),
+        transform=transform,
         col="img_paths",
     )
 
     test_dataset_reconstructed = MyDataset(
         test_df,
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
+        transform=transform,
         col="rec_paths",
     )
 
     train_dataset_reconstructed = MyDataset(
         train_df,
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
+        transform=transform,
         col="rec_paths",
     )
 
     valid_dataset_reconstructed = MyDataset(
         valid_df,
         os.path.join("reports", run_id, "Translate_FROM_TO_IMG"),
+        transform=transform,
         col="rec_paths",
     )
 
@@ -268,9 +282,7 @@ class SimpleCNN(nn.Module):
     def __init__(self):
         super(SimpleCNN, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(
-                1, 16, kernel_size=3, stride=1, padding=1
-            ),  # Changed from 3 to 1 for grayscale
+            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
