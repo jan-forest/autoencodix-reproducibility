@@ -1010,7 +1010,7 @@ cfg['DATA_TYPE']['ANNO'] = dict()
 cfg['DATA_TYPE']['ANNO']['TYPE'] = "ANNOTATION"
 cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "combined_clin_formatted.parquet"
 # cfg['DATA_TYPE']['ANNO']['FILE_RAW'] = "data_clinical_formatted.parquet"
-dm = ["METH", "RNA"]
+dm = ["RNA"]
 for m in dm:
 	cfg['DATA_TYPE'][m] = dict()
 	cfg['DATA_TYPE'][m] = dict()
