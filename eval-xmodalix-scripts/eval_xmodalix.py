@@ -14,7 +14,6 @@ import rasterio
 import matplotlib.pyplot as plt
 import warnings
 import matplotlib
-import argparse
 
 warnings.filterwarnings("ignore", category=matplotlib.MatplotlibDeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning, module="matplotlib")
@@ -43,13 +42,12 @@ def get_cfg(run_id):
 
 
 class ExtraClassLabelsDataset(Dataset):
-    def __init__(self, df, img_dir, mapping, transform=None, col="img_paths", grayscale=False):
+    def __init__(self, df, img_dir, mapping, transform=None, col="img_paths"):
         self.df = df
         self.img_dir = img_dir
         self.transform = transform
         self.col = col
         self.mapping = mapping
-        self.grayscale = grayscale
 
     def __len__(self):
         return len(self.df)
@@ -61,55 +59,20 @@ class ExtraClassLabelsDataset(Dataset):
         with rasterio.open(img_name) as src:
             img = src.read()
             img = np.transpose(img, (1, 2, 0))
-            
-            if self.grayscale:
-                # Convert to grayscale
-                if img.shape[2] > 1:
-                    # If multi-channel, convert to grayscale by averaging channels
-                    gray_img = np.mean(img, axis=2).astype(img.dtype)
-                else:
-                    # Already single channel
-                    gray_img = img[:, :, 0]
-                
-                # Convert to uint8 for PIL
-                gray_img_uint8 = (gray_img * 255).astype("uint8")
-                
-                # Create PIL image in grayscale mode
-                image = Image.fromarray(gray_img_uint8, mode="L")
-            else:
-                # RGB processing (original logic)
-                img = (
-                    img[:, :, :3]
-                    if img.shape[2] > 3
-                    else np.repeat(img, 3, axis=2)
-                    if img.shape[2] == 1
-                    else img
-                )
-                img = (img * 255).astype("uint8")
-                image = Image.fromarray(img, "RGB")
+            img = (
+                img[:, :, :3]
+                if img.shape[2] > 3
+                else np.repeat(img, 3, axis=2)
+                if img.shape[2] == 1
+                else img
+            )
+            img = (img * 255).astype("uint8")
+            image = Image.fromarray(img, "RGB")
 
         if self.transform:
             image = self.transform(image)
 
         return image, label
-
-
-def get_transforms(model_type):
-    """Get appropriate transforms based on model type"""
-    if model_type == "vgg16":
-        # VGG16 preprocessing - RGB with ImageNet normalization
-        return transforms.Compose([
-            transforms.Resize((224, 224)),
-            transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ])
-    elif model_type == "simple_cnn":
-        # Simple CNN preprocessing - Grayscale, no resize (already 128x128)
-        return transforms.Compose([
-            transforms.ToTensor(),  # Converts to 0-1 range automatically
-        ])
-    else:
-        raise ValueError(f"Unknown model type: {model_type}")
 
 
 def prepare_data(cfg, run_id):
@@ -147,11 +110,15 @@ def prepare_data(cfg, run_id):
     return train_df, valid_df, test_df
 
 
-def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
+def create_dataloaders(train_df, valid_df, test_df, cfg, run_id):
     """Create DataLoaders for training, validation, and testing"""
-    transform = get_transforms(model_type)
-    use_grayscale = (model_type == "simple_cnn")
-    
+    transform = transforms.Compose(
+        [
+            transforms.Resize((224, 224)),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+    )
     mapping = {"Q1": 0, "Q2": 1, "Q3": 2, "Q4": 3}
     cancer_mapping = {
         "Breast Cancer": 0,
@@ -169,7 +136,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
         mapping=mapping,
         transform=transform,
         col="img_paths",
-        grayscale=use_grayscale,
     )
 
     valid_dataset = ExtraClassLabelsDataset(
@@ -178,7 +144,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
         mapping=mapping,
         transform=transform,
         col="img_paths",
-        grayscale=use_grayscale,
     )
 
     test_dataset_original = ExtraClassLabelsDataset(
@@ -187,7 +152,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
         mapping=mapping,
         transform=transform,
         col="img_paths",
-        grayscale=use_grayscale,
     )
 
     test_dataset_reconstructed = ExtraClassLabelsDataset(
@@ -196,7 +160,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
         mapping=mapping,
         transform=transform,
         col="rec_paths",
-        grayscale=use_grayscale,
     )
 
     train_dataset_reconstructed = ExtraClassLabelsDataset(
@@ -205,7 +168,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
         mapping=mapping,
         transform=transform,
         col="rec_paths",
-        grayscale=use_grayscale,
     )
 
     valid_dataset_reconstructed = ExtraClassLabelsDataset(
@@ -214,7 +176,6 @@ def create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type):
         mapping=mapping,
         transform=transform,
         col="rec_paths",
-        grayscale=use_grayscale,
     )
 
     train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
@@ -251,8 +212,8 @@ def train_model(
     valid_losses = []
 
     train_dataset_size = len(train_loader.dataset)
+
     valid_dataset_size = len(valid_loader.dataset)
-    
     for epoch in range(num_epochs):
         model.train()
         running_loss = 0.0
@@ -309,6 +270,7 @@ def evaluate(model, data_loader, device):
 def plot_losses(
     train_losses, val_losses, run_id, outpath="xmodalix_eval_classifier_losses.png"
 ):
+
     plt.figure(figsize=(10, 6))
     plt.plot(train_losses, label="Training Loss")
     plt.plot(val_losses, label="Validation Loss")
@@ -338,18 +300,18 @@ class SimpleCNN(nn.Module):
     def __init__(self, num_classes=4):
         super(SimpleCNN, self).__init__()
         self.features = nn.Sequential(
-            nn.Conv2d(1, 16, kernel_size=3, stride=1, padding=1),  # Changed to 1 for grayscale
+            nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),  # 128x128 -> 64x64
+            nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Conv2d(16, 32, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),  # 64x64 -> 32x32
+            nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1),
             nn.ReLU(inplace=True),
-            nn.MaxPool2d(kernel_size=2, stride=2),  # 32x32 -> 16x16
+            nn.MaxPool2d(kernel_size=2, stride=2),
         )
         self.classifier = nn.Sequential(
-            nn.Linear(64 * 16 * 16, 128),  # Fixed for 128x128 input
+            nn.Linear(64 * 28 * 28, 128),
             nn.ReLU(inplace=True),
             nn.Dropout(0.5),
             nn.Linear(128, num_classes),
@@ -362,8 +324,7 @@ class SimpleCNN(nn.Module):
         return x
 
 
-def get_vgg16_model(num_classes):
-    """Get VGG16 model for classification"""
+def get_model(num_classes):
     model = models.vgg16(weights="DEFAULT")
 
     # Freeze all layers, except last one for transfer learning
@@ -377,36 +338,7 @@ def get_vgg16_model(num_classes):
     return model
 
 
-def get_simple_cnn_model(num_classes):
-    """Get Simple CNN model for classification"""
-    return SimpleCNN(num_classes=num_classes)
-
-
-def get_model(model_type, num_classes):
-    """Get model based on type"""
-    if model_type == "vgg16":
-        return get_vgg16_model(num_classes)
-    elif model_type == "simple_cnn":
-        return get_simple_cnn_model(num_classes)
-    else:
-        raise ValueError(f"Unknown model type: {model_type}")
-
-
-def get_optimizer(model, model_type):
-    """Get appropriate optimizer based on model type"""
-    if model_type == "vgg16":
-        # Only update the parameters of the last layer for VGG16
-        return optim.Adam(model.classifier[6].parameters(), lr=0.001)
-    elif model_type == "simple_cnn":
-        # Update all parameters for SimpleCNN
-        return optim.Adam(model.parameters(), lr=0.0005)
-    else:
-        raise ValueError(f"Unknown model type: {model_type}")
-
-
-def main(run_id, model_type):
-    print(f"Using model: {model_type}")
-    
+def main(run_id):
     cfg = get_cfg(run_id)
     train_df, valid_df, test_df = prepare_data(cfg, run_id)
     (
@@ -416,16 +348,20 @@ def main(run_id, model_type):
         train_loader_reconstructed,
         valid_loader_reconstructed,
         test_loader_reconstructed,
-    ) = create_dataloaders(train_df, valid_df, test_df, cfg, run_id, model_type)
+    ) = create_dataloaders(train_df, valid_df, test_df, cfg, run_id)
 
     # num classes dynamic based on unique values in num_class_label
     num_classes = 5 if "TCGA" in run_id else 4
-    
-    model = get_model(model_type, num_classes)
-    model_recon = get_model(model_type, num_classes)
+    #### TO USE A SIMPLE CNN MODEL, UNCOMMENT THE FOLLOWING LINES ####
+    # model = SimpleCNN(num_classes=num_classes)  # 4 classes for num_class_labels
+    # model_recon = SimpleCNN(num_classes=num_classes)
+    # In your main function, replace the SimpleCNN instantiation with:
+    model = get_model(num_classes)
+    model_recon = get_model(num_classes)
 
-    optimizer = get_optimizer(model, model_type)
-    optimizer_recon = get_optimizer(model_recon, model_type)
+    # Modify the optimizer to only update the parameters of the last layer
+    optimizer = optim.Adam(model.classifier[6].parameters(), lr=0.001)
+    optimizer_recon = optim.Adam(model_recon.classifier[6].parameters(), lr=0.001)
     criterion = nn.CrossEntropyLoss()
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -443,9 +379,7 @@ def main(run_id, model_type):
 
     print("Final validation loss:", val_losses[-1])
 
-    # Include model type in filename
-    loss_filename = f"xmodalix_eval_classifier_losses_{model_type}.png"
-    plot_losses(train_losses, val_losses, run_id, loss_filename)
+    plot_losses(train_losses, val_losses, run_id)
 
     # Evaluate on train and validation sets (original and reconstructed)
     train_accuracy, _, train_f1 = evaluate(model, train_loader, device)
@@ -479,21 +413,17 @@ def main(run_id, model_type):
         device,
         num_epochs=EPOCHS,
     )
-    
-    recon_loss_filename = f"xmodalix_eval_classifier_recon_losses_{model_type}.png"
     plot_losses(
         train_recon_lossed,
         val_recon_losses,
         run_id,
-        recon_loss_filename,
+        "xmodalix_eval_classifier_recon_losses.png",
     )
-    
     (
         accuracy_t_reconstructed,
         conf_matrix_t_reconstructed,
         f1_t_reconstructed,
     ) = evaluate(model_recon, test_loader_reconstructed, device)
-    
     # Create a DataFrame for value counts
     counts_df = (
         pd.DataFrame(
@@ -558,15 +488,12 @@ def main(run_id, model_type):
 
     # Create the DataFrame
     metrics_df = pd.DataFrame(metrics_dict)
-    
-    # Include model type in filename
-    metrics_filename = f"xmodalix_eval_classifier_metrics_{model_type}.csv"
     metrics_df.to_csv(
         os.path.join(
             "reports",
             "paper-visualizations",
             RUN_ID.split("_")[0],
-            metrics_filename,
+            "xmodalix_eval_classifier_metrics.csv",
         ),
         index=False,
     )
@@ -574,32 +501,65 @@ def main(run_id, model_type):
     print("\nPerformance Comparison:")
     print(metrics_df)
 
-    # Include model type in filename
-    model_filename = f"cnn_classifier_{model_type}.pth"
+    # print("\nDetailed Performance:")
+    # print(f"Original Train Set Accuracy: {train_accuracy:.4f}")
+    # print(f"Original Train Set F1 score: {train_f1:.4f}")
+    # print(f"Original confusion matrix:\n{conf_matrix_original}")
+    # print("-------------------------------------\n")
+
+    # print(f"Reconstructed Train Set Accuracy: {train_accuracy_reconstructed:.4f}")
+    # print(f"Reconstructed Train Set F1 score: {train_f1_reconstructed:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(f"Original Validation Set Accuracy: {valid_accuracy:.4f}")
+    # print(f"Original Validation Set F1 score: {valid_f1:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(f"Reconstructed Validation Set Accuracy: {valid_accuracy_reconstructed:.4f}")
+    # print(f"Reconstructed Validation Set F1 score: {valid_f1_reconstructed:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(f"Original Test Set Accuracy: {accuracy_original:.4f}")
+    # print(f"Original Test Set F1 score: {f1_original:.4f}")
+    # print(f"Original confusion matrix:\n{conf_matrix_original}")
+    # print("-------------------------------------\n")
+
+    # print(f"Reconstructed Test Set Accuracy: {accuracy_reconstructed:.4f}")
+    # print(f"Reconstructed Test Set F1 score: {f1_reconstructed:.4f}")
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_reconstructed}")
+    # print("-------------------------------------\n")
+
+    # print(
+    #     f"Reconstructed Test Set Trained on Reconstructed Accuracy: {accuracy_t_reconstructed:.4f}"
+    # )
+    # print(
+    #     f"Reconstructed Test Set Trained on Reconstructed F1 score: {f1_t_reconstructed:.4f}"
+    # )
+    # print(f"Reconstructed confusion matrix:\n{conf_matrix_t_reconstructed}")
+    # print("-------------------------------------\n")
+    # print(f"Test set F1 score difference: {f1_original - f1_reconstructed:.4f}")
+    # print(
+    #     f"Test Set trained on reconstructed F1 score difference: {f1_original - f1_t_reconstructed:.4f}"
+    # )
+
+    # print("\nClass Distribution:")
+    # print(counts_df)
+
     torch.save(
         model.state_dict(),
         os.path.join(
             "reports",
             "paper-visualizations",
             RUN_ID.split("_")[0],
-            model_filename,
+            "cnn_classifier.pth",
         ),
     )
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Train classification model with different architectures")
-    parser.add_argument("run_id", help="Run ID for the experiment")
-    parser.add_argument(
-        "--model", 
-        choices=["vgg16", "simple_cnn"], 
-        default="vgg16", 
-        help="Model type to use (default: vgg16)"
-    )
-    
-    args = parser.parse_args()
-    
     global RUN_ID
-    RUN_ID = args.run_id
-    
-    main(RUN_ID, args.model)
+    RUN_ID = sys.argv[1]
+    main(RUN_ID)
