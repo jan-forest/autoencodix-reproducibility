@@ -635,7 +635,7 @@ cfg["DELTA_PAIR"] = 0.7
 cfg["DELTA_CLASS"] = 0.0
 cfg["PRETRAIN_TARGET_MODALITY"] = "pretrain_image"
 cfg["ANNEAL_PRETRAINING"] = True
-cfg["PRETRAIN_EPOCHS"] = 0
+cfg["PRETRAIN_EPOCHS"] = 100
 cfg["TRANSLATE"] = "IMG_to_IMG"
 
 
