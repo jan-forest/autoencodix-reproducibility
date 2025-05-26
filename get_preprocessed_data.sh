@@ -12,11 +12,9 @@ else
     ## Get TCGA formatted data
     ## Get SCcortex formatted data
     ## Get Ontology files
-    # wget -nv -P data/raw https://zenodo.org/records/13691753/files/AutoencodixZenodoReproducibility.zip
-    wget -nv -P data/raw https://cloud.scadsai.uni-leipzig.de/index.php/s/McdajWx3rz5sKrm/download/Autoencodix_Reproducibility_First_Revision_Final_250521.zip
-    unzip -q data/raw/Autoencodix_Reproducibility_First_Revision_Final_250521.zip -d data/raw
-    # unzip -q data/raw/AutoencodixZenodoReproducibility.zip -d data/raw
-    rm data/raw/AutoencodixZenodoReproducibility.zip
+    wget -nv -P data/raw https://zenodo.org/records/15518831/files/AutoencodixZenodoReproducibility_v2.zip
+    unzip -q data/raw/AutoencodixZenodoReproducibility_v2.zip -d data/raw
+    rm data/raw/AutoencodixZenodoReproducibility_v2.zip
 
     log_message "Downloaded all data"
     log_message "Creating file that indicates that the data is downloaded"
