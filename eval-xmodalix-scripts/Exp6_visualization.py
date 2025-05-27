@@ -53,7 +53,6 @@ def plot_embedding_2D(
     # Create the plot
     fig, ax = plt.subplots(figsize=figsize)
     unique_labels = np.unique(labels)
-    palette = sns.color_palette("husl", len(unique_labels))
 
     # Determine the column names for x and y
     # Check if it's PCA or UMAP data based on column names
@@ -78,10 +77,10 @@ def plot_embedding_2D(
         x=x_col,
         y=y_col,
         hue="label",
+        hue_order=unique_labels,
         data=data,
-        palette=palette,
         s=40,
-        alpha=0.8,
+        alpha=0.5,
         edgecolor="black",
         ax=ax,
     )
@@ -91,8 +90,8 @@ def plot_embedding_2D(
         sns.scatterplot(
             x=means[x_col],
             y=means[y_col],
-            hue=means.index,
-            palette=palette,
+            hue=unique_labels,
+            hue_order=unique_labels,
             s=200,
             edgecolor="black",
             alpha=0.9,
